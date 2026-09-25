@@ -282,8 +282,8 @@ let gravidade = 0.55;
 let forcaPulo = -14;
 let obstaculos = [];
 let coracoes = [];
-let velocidade = 5;
-const velocidadeMax = 10;
+let velocidade = 4.5;
+const velocidadeMax = 8;
 let pontos = 0;
 let vidas = 3;
 const vidasMax = 3;
@@ -716,19 +716,15 @@ canvas.addEventListener("click", pular);
 canvas.addEventListener("touchstart", e => { e.preventDefault(); pular(); });
 
 function nivelDificuldade() {
-  if (pontos < 100) return 0;
-  if (pontos < 250) return 1;
-  if (pontos < 450) return 2;
-  if (pontos < 700) return 3;
+  if (pontos < 200) return 0;
+  if (pontos < 450) return 1;
+  if (pontos < 750) return 2;
+  if (pontos < 1100) return 3;
   return 4;
 }
 
-// ---------- Geração procedural de obstáculos (com espaçamento seguro) ----------
-// A distância mínima entre grupos de obstáculos é calculada a partir do
-// tempo de voo do salto do mamute, garantindo que sempre seja possível
-// saltar por cima de cada grupo antes que o próximo apareça.
-
-let framesParaProximoObstaculo = 90;
+// ---------- Geração procedural de obstáculos (fácil, com bastante espaço) ----------
+let framesParaProximoObstaculo = 130;
 
 function tipoAleatorio() {
   const tipos = ["iceberg","espinho","pedra"];
@@ -736,19 +732,21 @@ function tipoAleatorio() {
 }
 
 function novaAlturaObstaculo(nivel) {
-  const alturaBase = 28 + Math.random()*22;
-  const alturaExtra = nivel * (4 + Math.random()*4);
-  return Math.min(75, alturaBase + alturaExtra);
+  const alturaBase = 25 + Math.random()*18;
+  const alturaExtra = nivel * (3 + Math.random()*3);
+  return Math.min(60, alturaBase + alturaExtra);
 }
 
 // Retorna a largura total ocupada pelo grupo gerado (do início ao fim)
 function criarObstaculo() {
   const nivel = nivelDificuldade();
-  const largura = 40 + nivel * 2 + Math.random()*8;
+  const largura = 40 + nivel * 2;
 
-  const padroes = ["unico", "unico", "unico", "duplo"];
-  if (nivel >= 2) padroes.push("duplo", "escalonado");
-  if (nivel >= 3) padroes.push("trio");
+  // Predominantemente obstáculos únicos; grupos de 2 só aparecem
+  // ocasionalmente e apenas em níveis mais avançados, sempre com bastante espaço.
+  const padroes = ["unico", "unico", "unico", "unico", "unico"];
+  if (nivel >= 2) padroes.push("duplo");
+  if (nivel >= 4) padroes.push("duplo");
   const padrao = padroes[Math.floor(Math.random()*padroes.length)];
 
   let inicioX = canvas.width;
@@ -762,32 +760,11 @@ function criarObstaculo() {
   } else if (padrao === "duplo") {
     const h1 = novaAlturaObstaculo(nivel);
     obstaculos.push({ x: inicioX, y: chao-h1, w: largura, h: h1, tipo: tipoAleatorio() });
-    const espacoInterno = 110 + Math.random()*40;
+    const espacoInterno = 170 + Math.random()*50;
     const x2 = inicioX + largura + espacoInterno;
     const h2 = novaAlturaObstaculo(nivel);
     obstaculos.push({ x: x2, y: chao-h2, w: largura, h: h2, tipo: tipoAleatorio() });
     fimX = x2 + largura;
-
-  } else if (padrao === "escalonado") {
-    const qtd = 2;
-    let alturaInicial = 22 + Math.random()*15;
-    const crescente = Math.random() < 0.5;
-    let xAtual = inicioX;
-    for (let i=0;i<qtd;i++) {
-      const h = Math.min(70, alturaInicial + (crescente ? i : (qtd-1-i)) * (8 + nivel*2));
-      obstaculos.push({ x: xAtual, y: chao-h, w: largura*0.9, h, tipo: tipoAleatorio() });
-      xAtual += largura*0.9 + 100 + Math.random()*30;
-    }
-    fimX = xAtual;
-
-  } else if (padrao === "trio") {
-    let xAtual = inicioX;
-    for (let i=0;i<3;i++) {
-      const h = novaAlturaObstaculo(nivel) * (0.6 + Math.random()*0.3);
-      obstaculos.push({ x: xAtual, y: chao-h, w: largura*0.8, h, tipo: tipoAleatorio() });
-      xAtual += largura*0.8 + 90 + Math.random()*25;
-    }
-    fimX = xAtual;
   }
 
   return fimX - inicioX;
@@ -888,7 +865,7 @@ function mostrarQuiz() {
     quizEl.style.display = "none";
 
     if (resultado === true) {
-      velocidade = Math.min(velocidadeMax, velocidade + 0.4);
+      velocidade = Math.min(velocidadeMax, velocidade + 0.2);
       pontos += 15;
       mostrarFeedback(true);
       tocarSom("acerto");
@@ -1101,10 +1078,10 @@ function loop() {
   framesParaProximoObstaculo--;
   if (framesParaProximoObstaculo <= 0) {
     const larguraGrupo = criarObstaculo();
-    // distância mínima de segurança baseada no tempo de voo do salto
-    const distanciaSeguranca = 230 + Math.random()*40;
+    // folga bem maior entre grupos, garantindo tempo confortável de reação e salto
+    const distanciaSeguranca = 340 + Math.random()*80;
     framesParaProximoObstaculo = Math.max(
-      40,
+      70,
       Math.round((larguraGrupo + distanciaSeguranca) / velocidade)
     );
   }
