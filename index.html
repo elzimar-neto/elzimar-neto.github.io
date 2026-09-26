@@ -1,864 +1,293 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MAAMUTE-TURI | Grupo de Pesquisa & Tecnologias Educacionais</title>
-  
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts: Fira Code & Space Grotesk -->
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAAMUTE-TURI | Sidebar Layout</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-dark:#050b07;--bg-card:rgba(10,20,14,.8);--bg-card-hover:rgba(16,32,22,.9);
+  --bg-subcard:rgba(0,0,0,.45);--bg-console:#020804;--neon-green:#00ff66;
+  --emerald-main:#10b981;--emerald-dark:#047857;--green-glow:rgba(0,255,102,.22);
+  --text-bright:#f0fdf4;--text-muted:#a7f3d0;--text-dim:#6ee7b7;
+  --border-tech:rgba(16,185,129,.3);--border-glow:rgba(0,255,102,.5);
+  --font-tech:'Fira Code',monospace;--font-sans:'Space Grotesk',sans-serif;
+}
+[data-theme="light"]{
+  --bg-dark:#f2faf5;--bg-card:rgba(255,255,255,.92);--bg-card-hover:#fff;
+  --bg-subcard:rgba(16,185,129,.06);--bg-console:#e8f5ed;--neon-green:#059669;
+  --emerald-main:#10b981;--emerald-dark:#047857;--green-glow:rgba(5,150,105,.18);
+  --text-bright:#0f172a;--text-muted:#1e293b;--text-dim:#334155;
+  --border-tech:rgba(16,185,129,.35);--border-glow:rgba(5,150,105,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0;transition:background-color .25s,border-color .25s,color .25s,box-shadow .25s}
+html,body{height:100%}
+body{font-family:var(--font-sans);background:var(--bg-dark);color:var(--text-bright);
+  background-image:radial-gradient(circle at 50% 0%,rgba(16,185,129,.15) 0%,transparent 65%),
+  linear-gradient(rgba(16,185,129,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(16,185,129,.04) 1px,transparent 1px);
+  background-size:100% 100%,28px 28px,28px 28px;background-attachment:fixed;}
 
-  <style>
-    /* Variáveis do Modo Escuro (Padrão) */
-    :root {
-      --bg-dark: #050b07;
-      --bg-card: rgba(10, 20, 14, 0.8);
-      --bg-card-hover: rgba(16, 32, 22, 0.9);
-      --bg-subcard: rgba(0, 0, 0, 0.45);
-      --bg-console: #020804;
-      
-      --neon-green: #00ff66;
-      --emerald-main: #10b981;
-      --emerald-dark: #047857;
-      --green-glow: rgba(0, 255, 102, 0.22);
-      
-      --text-bright: #f0fdf4;
-      --text-muted: #a7f3d0;
-      --text-dim: #6ee7b7;
-      
-      --border-tech: rgba(16, 185, 129, 0.3);
-      --border-glow: rgba(0, 255, 102, 0.5);
-      
-      --font-tech: 'Fira Code', monospace;
-      --font-sans: 'Space Grotesk', sans-serif;
-    }
+.app-shell{display:flex;min-height:100vh}
 
-    /* Variáveis do Modo Claro (Light Theme) */
-    [data-theme="light"] {
-      --bg-dark: #f2faf5;
-      --bg-card: rgba(255, 255, 255, 0.92);
-      --bg-card-hover: #ffffff;
-      --bg-subcard: rgba(16, 185, 129, 0.06);
-      --bg-console: #e8f5ed;
-      
-      --neon-green: #059669;
-      --emerald-main: #10b981;
-      --emerald-dark: #047857;
-      --green-glow: rgba(5, 150, 105, 0.18);
-      
-      --text-bright: #0f172a;
-      --text-muted: #1e293b;
-      --text-dim: #334155;
-      
-      --border-tech: rgba(16, 185, 129, 0.35);
-      --border-glow: rgba(5, 150, 105, 0.5);
-    }
+/* SIDEBAR */
+.sidebar{
+  width:280px;flex-shrink:0;background:var(--bg-card);backdrop-filter:blur(14px);
+  border-right:1px solid var(--border-tech);padding:30px 20px;position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;gap:26px;overflow-y:auto;
+}
+.sidebar-brand{display:flex;align-items:flex-start;gap:14px}
+.mascot-ring{width:56px;height:56px;border-radius:14px;border:2px solid var(--neon-green);
+  padding:5px;background:var(--bg-subcard);box-shadow:0 0 20px var(--green-glow);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mascot-ring img{max-width:100%;max-height:100%;object-fit:contain}
+.sidebar-brand h1{font-size:1.5rem;font-weight:800;letter-spacing:-1px;line-height:1.1}
+.sidebar-brand h1 span{color:var(--neon-green)}
+.brand-acronym{
+  font-family:var(--font-tech);font-size:.7rem;color:var(--text-dim);line-height:1.4;margin-top:6px;
+  display:block;
+}
+.brand-acronym .prompt{color:var(--neon-green);font-weight:700}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
-    }
+.status-indicator{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-tech);
+  font-size:.75rem;color:var(--neon-green);background:rgba(16,185,129,.12);
+  border:1px solid var(--border-tech);padding:6px 12px;border-radius:50px;width:fit-content}
+.pulse-dot{width:9px;height:9px;background:var(--neon-green);border-radius:50%;
+  box-shadow:0 0 10px var(--neon-green);animation:pulse 1.5s infinite}
+@keyframes pulse{0%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.2)}100%{opacity:1;transform:scale(1)}}
 
-    body {
-      font-family: var(--font-sans);
-      background-color: var(--bg-dark);
-      color: var(--text-bright);
-      min-height: 100vh;
-      line-height: 1.6;
-      background-image: 
-        radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15) 0%, transparent 65%),
-        linear-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
-      background-size: 100% 100%, 28px 28px, 28px 28px;
-      background-attachment: fixed;
-    }
+.nav-console{display:flex;flex-direction:column;gap:8px}
+.console-btn{background:transparent;border:1px solid var(--border-tech);padding:12px 16px;
+  font-family:var(--font-tech);font-size:.85rem;font-weight:600;color:var(--text-dim);
+  border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left}
+.console-btn:hover{background:var(--bg-card-hover);color:var(--neon-green);border-color:var(--neon-green)}
+.console-btn.active{background:var(--emerald-dark);color:#fff;border-color:var(--neon-green);box-shadow:0 0 20px var(--green-glow)}
 
-    .tech-wrapper {
-      max-width: 1150px;
-      margin: 30px auto;
-      padding: 0 20px 80px 20px;
-    }
+.sidebar-footer{margin-top:auto}
 
-    /* Header Banner */
-    .hero-header {
-      background: var(--bg-card);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border-tech);
-      border-radius: 20px;
-      padding: 35px 40px;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 30px;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-    }
+.theme-btn-side{display:flex;align-items:center;gap:10px;background:var(--bg-subcard);
+  border:1px solid var(--neon-green);color:var(--neon-green);font-family:var(--font-tech);
+  font-size:.8rem;font-weight:700;padding:10px 14px;border-radius:10px;cursor:pointer;width:100%;justify-content:center}
+.theme-btn-side:hover{background:var(--emerald-dark);color:#fff}
 
-    .hero-header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(90deg, var(--emerald-dark), var(--neon-green), var(--emerald-main));
-    }
+/* MAIN CONTENT — coluna flex para empurrar footer para baixo */
+.main-content{
+  flex:1;display:flex;flex-direction:column;min-height:100vh;
+}
+.main-inner{padding:35px 40px;max-width:1000px;flex:1 0 auto;width:100%}
 
-    .hero-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 25px;
-      flex-wrap: wrap;
-    }
+.page-title{font-family:var(--font-tech);color:var(--neon-green);font-size:.85rem;
+  letter-spacing:1px;margin-bottom:6px}
+.section-heading{font-size:1.8rem;font-weight:800;margin-bottom:24px;letter-spacing:-.5px}
 
-    .brand-identity {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
+.tab-pane{display:none}
+.tab-pane.active{display:block;animation:techFade .3s ease-in-out}
+@keyframes techFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-    .mascot-ring {
-      width: 90px;
-      height: 90px;
-      border-radius: 18px;
-      border: 2px solid var(--neon-green);
-      padding: 6px;
-      background: var(--bg-subcard);
-      box-shadow: 0 0 20px var(--green-glow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
+.tech-panel{background:var(--bg-card);backdrop-filter:blur(12px);border:1px solid var(--border-tech);
+  border-radius:16px;padding:28px;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,.05)}
+.panel-header-title{font-family:var(--font-tech);font-size:1.05rem;color:var(--neon-green);
+  margin-bottom:18px;display:flex;align-items:center;gap:10px;border-bottom:1px dashed var(--border-tech);padding-bottom:12px}
 
-    .mascot-ring img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.feature-card{background:var(--bg-subcard);border:1px solid var(--border-tech);border-radius:12px;
+  padding:22px;display:flex;flex-direction:column;gap:10px}
+.feature-card:hover{border-color:var(--neon-green);background:var(--bg-card-hover);
+  transform:translateY(-3px);box-shadow:0 8px 20px var(--green-glow)}
+.feature-card i{font-size:2rem;color:var(--neon-green)}
+.feature-card h3{font-size:1.05rem}
+.feature-card p{color:var(--text-dim);font-size:.9rem;line-height:1.6}
 
-    .brand-titles h1 {
-      font-size: 3.2rem;
-      font-weight: 800;
-      letter-spacing: -1.5px;
-      color: var(--text-bright);
-      line-height: 1;
-    }
+.teacher-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:18px}
+.teacher-card{background:var(--bg-subcard);border:1px solid var(--border-tech);border-radius:14px;padding:20px}
+.teacher-card-content{display:flex;gap:18px}
+.teacher-card:hover{border-color:var(--neon-green);box-shadow:0 0 18px var(--green-glow)}
+.teacher-avatar{width:72px;height:72px;border-radius:14px;object-fit:cover;border:2px solid var(--neon-green);background:#000;flex-shrink:0}
+.teacher-details h4{font-size:1.02rem;font-weight:700}
+.badge-role{font-family:var(--font-tech);font-size:.74rem;color:var(--neon-green);
+  background:rgba(16,185,129,.1);padding:3px 9px;border-radius:4px;display:inline-block;
+  margin:5px 0 8px;border:1px solid var(--border-tech)}
+.teacher-details p{font-size:.87rem;color:var(--text-dim);line-height:1.5}
+.lattes-link{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-family:var(--font-tech);
+  font-size:.78rem;color:var(--neon-green);text-decoration:none;background:rgba(16,185,129,.08);
+  border:1px solid var(--border-tech);padding:5px 11px;border-radius:6px;width:fit-content}
+.lattes-link:hover{background:var(--neon-green);color:#000}
 
-    .brand-titles h1 span {
-      color: var(--neon-green);
-    }
+.student-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px}
+.student-card{display:flex;align-items:center;gap:14px;background:var(--bg-subcard);
+  border:1px solid var(--border-tech);border-radius:12px;padding:18px}
 
-    .status-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--font-tech);
-      font-size: 0.8rem;
-      color: var(--neon-green);
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid var(--border-tech);
-      padding: 6px 14px;
-      border-radius: 50px;
-    }
+.project-console{background:var(--bg-console);border:1px solid var(--border-glow);border-radius:14px;padding:26px}
+.btn-action-tech{display:inline-flex;align-items:center;gap:10px;background:var(--emerald-main);
+  color:#fff;font-family:var(--font-tech);font-weight:700;font-size:.88rem;padding:12px 22px;
+  border-radius:8px;text-decoration:none;box-shadow:0 0 15px var(--green-glow);margin-top:16px}
+.btn-action-tech:hover{background:var(--neon-green);color:#000;transform:scale(1.03)}
 
-    .pulse-dot {
-      width: 10px;
-      height: 10px;
-      background-color: var(--neon-green);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--neon-green);
-      animation: pulse 1.5s infinite;
-    }
+.goals-container{display:flex;flex-direction:column;gap:14px}
+.goal-box{background:var(--bg-subcard);border:1px solid var(--border-tech);border-radius:12px;
+  padding:20px;display:flex;gap:14px;align-items:flex-start}
+.goal-box i{font-size:1.3rem;color:var(--neon-green);margin-top:2px}
+.goal-box h4{color:var(--neon-green);font-size:1.05rem;margin-bottom:5px}
+.goal-box p{font-size:.92rem;line-height:1.6}
 
-    @keyframes pulse {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(1.2); }
-      100% { opacity: 1; transform: scale(1); }
-    }
+/* FOOTER FIXO NA PARTE DE BAIXO */
+.tech-footer-centered{
+  flex-shrink:0;padding:20px 0;border-top:1px solid var(--border-tech);
+  text-align:center;font-family:var(--font-tech);font-size:.8rem;color:var(--text-muted);
+  background:var(--bg-card);
+}
 
-    .terminal-sub-bar {
-      margin-top: 25px;
-      padding: 14px 20px;
-      background: var(--bg-subcard);
-      border: 1px solid var(--border-tech);
-      border-radius: 10px;
-      font-family: var(--font-tech);
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .terminal-sub-bar .prompt {
-      color: var(--neon-green);
-      font-weight: 700;
-    }
-
-    /* Console Tabs Navigation */
-    .nav-console {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-    }
-
-    .console-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border-tech);
-      padding: 13px 24px;
-      font-family: var(--font-tech);
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text-dim);
-      border-radius: 10px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      white-space: nowrap;
-    }
-
-    .console-btn:hover {
-      background: var(--bg-card-hover);
-      color: var(--neon-green);
-      border-color: var(--neon-green);
-      box-shadow: 0 0 15px var(--green-glow);
-    }
-
-    .console-btn.active {
-      background: var(--emerald-dark);
-      color: #ffffff;
-      border-color: var(--neon-green);
-      box-shadow: 0 0 20px var(--green-glow);
-    }
-
-    /* Tab Panes */
-    .tab-pane {
-      display: none;
-    }
-
-    .tab-pane.active {
-      display: block;
-      animation: techFade 0.3s ease-in-out;
-    }
-
-    @keyframes techFade {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .tech-panel {
-      background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-tech);
-      border-radius: 16px;
-      padding: 30px;
-      margin-bottom: 22px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .panel-header-title {
-      font-family: var(--font-tech);
-      font-size: 1.15rem;
-      color: var(--neon-green);
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-bottom: 1px dashed var(--border-tech);
-      padding-bottom: 12px;
-    }
-
-    /* Feature Grid */
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .feature-card {
-      background: var(--bg-subcard);
-      border: 1px solid var(--border-tech);
-      border-radius: 12px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .feature-card:hover {
-      border-color: var(--neon-green);
-      background: var(--bg-card-hover);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px var(--green-glow);
-    }
-
-    .feature-card i {
-      font-size: 2.2rem;
-      color: var(--neon-green);
-    }
-
-    .feature-card h3 {
-      font-size: 1.15rem;
-      color: var(--text-bright);
-    }
-
-    .feature-card p {
-      color: var(--text-dim);
-      font-size: 0.92rem;
-      line-height: 1.6;
-    }
-
-    /* Teacher Cards */
-    .teacher-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-      gap: 20px;
-    }
-
-    .teacher-card {
-      display: flex;
-      gap: 20px;
-      background: var(--bg-subcard);
-      border: 1px solid var(--border-tech);
-      border-radius: 14px;
-      padding: 22px;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .teacher-card-content {
-      display: flex;
-      gap: 20px;
-    }
-
-    .teacher-card:hover {
-      border-color: var(--neon-green);
-      box-shadow: 0 0 18px var(--green-glow);
-    }
-
-    .teacher-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 14px;
-      object-fit: cover;
-      border: 2px solid var(--neon-green);
-      background: #000;
-      flex-shrink: 0;
-    }
-
-    .teacher-details h4 {
-      font-size: 1.1rem;
-      color: var(--text-bright);
-      font-weight: 700;
-    }
-
-    .teacher-details .badge-role {
-      font-family: var(--font-tech);
-      font-size: 0.78rem;
-      color: var(--neon-green);
-      background: rgba(16, 185, 129, 0.1);
-      padding: 3px 10px;
-      border-radius: 4px;
-      display: inline-block;
-      margin: 6px 0 10px 0;
-      border: 1px solid var(--border-tech);
-    }
-
-    .teacher-details p {
-      font-size: 0.9rem;
-      color: var(--text-dim);
-      line-height: 1.5;
-    }
-
-    .lattes-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 12px;
-      font-family: var(--font-tech);
-      font-size: 0.8rem;
-      color: var(--neon-green);
-      text-decoration: none;
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid var(--border-tech);
-      padding: 6px 12px;
-      border-radius: 6px;
-      width: fit-content;
-    }
-
-    .lattes-link:hover {
-      background: var(--neon-green);
-      color: #000;
-    }
-
-    .student-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 18px;
-    }
-
-    .student-card {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: var(--bg-subcard);
-      border: 1px solid var(--border-tech);
-      border-radius: 12px;
-      padding: 20px;
-    }
-
-    /* Project Box */
-    .project-console {
-      background: var(--bg-console);
-      border: 1px solid var(--border-glow);
-      border-radius: 14px;
-      padding: 30px;
-    }
-
-    .btn-action-tech {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--emerald-main);
-      color: #ffffff;
-      font-family: var(--font-tech);
-      font-weight: 700;
-      font-size: 0.9rem;
-      padding: 13px 26px;
-      border-radius: 8px;
-      text-decoration: none;
-      box-shadow: 0 0 15px var(--green-glow);
-      margin-top: 18px;
-    }
-
-    .btn-action-tech:hover {
-      background: var(--neon-green);
-      color: #000;
-      transform: scale(1.03);
-    }
-
-    /* Goals Container */
-    .goals-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .goal-box {
-      background: var(--bg-subcard);
-      border: 1px solid var(--border-tech);
-      border-radius: 12px;
-      padding: 22px;
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-    }
-
-    .goal-box i {
-      font-size: 1.4rem;
-      color: var(--neon-green);
-      margin-top: 2px;
-    }
-
-    .goal-box h4 {
-      color: var(--neon-green);
-      font-size: 1.1rem;
-      margin-bottom: 6px;
-    }
-
-    .goal-box p {
-      color: var(--text-bright);
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    /* Floating Theme Toggle (FAB) */
-    .floating-theme-btn {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      z-index: 999;
-      background: var(--bg-card);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid var(--neon-green);
-      color: var(--neon-green);
-      font-family: var(--font-tech);
-      font-size: 0.85rem;
-      font-weight: 700;
-      padding: 12px 20px;
-      border-radius: 50px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 15px var(--green-glow);
-    }
-
-    .floating-theme-btn:hover {
-      transform: translateY(-4px) scale(1.05);
-      background: var(--emerald-dark);
-      color: #ffffff;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 25px var(--green-glow);
-    }
-
-    /* Centered Footer */
-    .tech-footer-centered {
-      margin-top: 50px;
-      padding: 25px 0;
-      border-top: 1px solid var(--border-tech);
-      text-align: center;
-      font-family: var(--font-tech);
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    @media (max-width: 768px) {
-      .hero-header {
-        padding: 25px;
-      }
-      .brand-titles h1 {
-        font-size: 2.2rem;
-      }
-      .teacher-grid {
-        grid-template-columns: 1fr;
-      }
-      .teacher-card-content {
-        flex-direction: column;
-      }
-      .floating-theme-btn {
-        bottom: 15px;
-        right: 15px;
-        padding: 10px 16px;
-        font-size: 0.78rem;
-      }
-    }
-  </style>
+@media (max-width:900px){
+  .app-shell{flex-direction:column}
+  .sidebar{width:100%;height:auto;position:relative;flex-direction:column;align-items:stretch}
+  .nav-console{flex-direction:row;overflow-x:auto;width:100%}
+  .main-inner{padding:24px}
+  .teacher-grid{grid-template-columns:1fr}
+  .teacher-card-content{flex-direction:column}
+}
+</style>
 </head>
 <body>
+<div class="app-shell">
 
-  <div class="tech-wrapper">
-    
-    <!-- Header -->
-    <header class="hero-header">
-      <div class="hero-top-row">
-        <div class="brand-identity">
-          <div class="mascot-ring">
-            <img src="maamute.png" alt="Mascote MAAMUTE" onerror="this.onerror=null; this.src='https://via.placeholder.com/90/050b07/00ff66?text=MAAMUTE';">
-          </div>
-          <div class="brand-titles">
-            <h1>MAAMUTE<span>-TURI</span></h1>
-            <p style="color: var(--text-dim); font-size: 0.95rem; margin-top: 4px;">Grupo de Pesquisa, Ensino & Extensão Tecnológica</p>
-          </div>
-        </div>
-
-        <div class="status-indicator">
-          <span class="pulse-dot"></span> GRUPO ATIVO / OPERACIONAL
-        </div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mascot-ring"><img src="maamute.png" alt="Mascote" onerror="this.onerror=null;this.src='https://via.placeholder.com/56/050b07/00ff66?text=M';"></div>
+      <div>
+        <h1>MAAMUTE<span>-TURI</span></h1>
+        <span class="brand-acronym"><span class="prompt">&gt;</span> Modelagem Aplicada, Algoritmos, Matemática e Uso de Tecnologias Educacionais do Alto Turi</span>
       </div>
+    </div>
 
-      <div class="terminal-sub-bar">
-        <span class="prompt">&gt; ACRÔNIMO:</span> Modelagem Aplicada, Algoritmos, Matemática e Uso de Tecnologias Educacionais do Alto Turi
-      </div>
-    </header>
+    <div class="status-indicator"><span class="pulse-dot"></span> GRUPO ATIVO</div>
 
-    <!-- Navegação por Abas -->
     <nav class="nav-console">
-      <button class="console-btn active" onclick="switchTechTab('sobre', event)">
-        <i class="fa-solid fa-code"></i> // SOBRE
-      </button>
-      <button class="console-btn" onclick="switchTechTab('equipe', event)">
-        <i class="fa-solid fa-terminal"></i> // INTEGRANTES
-      </button>
-      <button class="console-btn" onclick="switchTechTab('projetos', event)">
-        <i class="fa-solid fa-microchip"></i> // PROJETOS
-      </button>
-      <button class="console-btn" onclick="switchTechTab('objetivos', event)">
-        <i class="fa-solid fa-network-wired"></i> // OBJETIVOS
-      </button>
+      <button class="console-btn active" onclick="switchTechTab('sobre',event)"><i class="fa-solid fa-code"></i> Sobre</button>
+      <button class="console-btn" onclick="switchTechTab('equipe',event)"><i class="fa-solid fa-terminal"></i> Integrantes</button>
+      <button class="console-btn" onclick="switchTechTab('projetos',event)"><i class="fa-solid fa-microchip"></i> Projetos</button>
+      <button class="console-btn" onclick="switchTechTab('objetivos',event)"><i class="fa-solid fa-network-wired"></i> Objetivos</button>
     </nav>
 
-    <!-- Seção 1: Sobre -->
-    <div id="pane-sobre" class="tab-pane active">
-      <div class="tech-panel">
-        <div class="panel-header-title">
-          <i class="fa-solid fa-microscope"></i> APRESENTAÇÃO INSTITUCIONAL
-        </div>
-        <p style="color: var(--text-bright); line-height: 1.8; font-size: 1.05rem; margin-bottom: 16px;">
-          O <strong>MAAMUTE-TURI</strong> é um grupo institucional de pesquisa e estudos sediado no <strong>Instituto Federal do Maranhão (IFMA) - Campus Zé Doca</strong>. Foi idealizado para consolidar um polo regional de inovação, aliando rigor científico ao desenvolvimento de soluções digitais voltadas para a educação técnica, tecnológica e básica da microrregião do Alto Turi.
-        </p>
-        <p style="color: var(--text-bright); line-height: 1.8; font-size: 1.05rem;">
-          Composto por pesquisadores docentes e estudantes das licenciaturas e cursos técnicos do <strong>IFMA Campus Zé Doca</strong>, o laboratório atua no desenvolvimento de softwares interativos, simulações analíticas, ambientes virtuais de aprendizagem e estudos aplicados em inteligência artificial e gamificação.
-        </p>
-      </div>
-
-      <div class="feature-grid">
-        <div class="feature-card">
-          <i class="fa-solid fa-laptop-code"></i>
-          <h3>Algoritmos & Programação</h3>
-          <p>Estruturação de dados, lógica computacional e ambientes práticos para o desenvolvimento de habilidades de programação e pensamento computacional.</p>
-        </div>
-
-        <div class="feature-card">
-          <i class="fa-solid fa-calculator"></i>
-          <h3>Matemática Aplicada</h3>
-          <p>Modelagem analítica, simulações numéricas e construção de objetos de aprendizagem interativos voltados ao ensino de ciências exatas.</p>
-        </div>
-
-        <div class="feature-card">
-          <i class="fa-solid fa-robot"></i>
-          <h3>Tecnologia Educacional & EaD</h3>
-          <p>Criação de mídias dinâmicas, Ambientes Virtuais de Aprendizagem (AVA) e recursos digitais abertos para apoiar a aprendizagem síncrona e assíncrona.</p>
-        </div>
-      </div>
+    <div class="sidebar-footer">
+      <button class="theme-btn-side" onclick="toggleTheme()">
+        <i class="fa-solid fa-moon" id="themeIcon"></i> <span id="themeText">Modo Escuro</span>
+      </button>
     </div>
+  </aside>
 
-    <!-- Seção 2: Integrantes -->
-    <div id="pane-equipe" class="tab-pane">
-      <div class="tech-panel">
-        <div class="panel-header-title">
-          <i class="fa-solid fa-user-shield"></i> CORPO DOCENTE (PESQUISADORES)
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="main-inner">
+
+      <div id="pane-sobre" class="tab-pane active">
+        <div class="page-title">// SOBRE</div>
+        <h2 class="section-heading">Apresentação Institucional</h2>
+        <div class="tech-panel">
+          <p style="line-height:1.8;margin-bottom:14px">O <strong>MAAMUTE-TURI</strong> é um grupo institucional de pesquisa sediado no <strong>IFMA - Campus Zé Doca</strong>, dedicado à inovação educacional na microrregião do Alto Turi.</p>
+          <p style="line-height:1.8">Composto por docentes e estudantes das licenciaturas e cursos técnicos, atua no desenvolvimento de softwares interativos, simulações, AVAs e estudos em IA e gamificação.</p>
         </div>
-        
+        <div class="feature-grid">
+          <div class="feature-card"><i class="fa-solid fa-laptop-code"></i><h3>Algoritmos & Programação</h3><p>Estruturação de dados e pensamento computacional.</p></div>
+          <div class="feature-card"><i class="fa-solid fa-calculator"></i><h3>Matemática Aplicada</h3><p>Modelagem analítica e objetos de aprendizagem interativos.</p></div>
+          <div class="feature-card"><i class="fa-solid fa-robot"></i><h3>Tecnologia Educacional & EaD</h3><p>Mídias dinâmicas, AVAs e recursos digitais abertos.</p></div>
+        </div>
+      </div>
+
+      <div id="pane-equipe" class="tab-pane">
+        <div class="page-title">// INTEGRANTES</div>
+        <h2 class="section-heading">Corpo Docente</h2>
         <div class="teacher-grid">
-          <!-- Elzimar -->
-          <div class="teacher-card">
-            <div class="teacher-card-content">
-              <img src="foto1.png" alt="Prof. Elzimar" class="teacher-avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Elzimar+Carvalho&background=047857&color=00ff66';">
-              <div class="teacher-details">
-                <h4>Prof. Elzimar José de Carvalho Neto</h4>
-                <span class="badge-role">[Especialista — Coordenador]</span>
-                <p>Professor do IFMA Campus Zé Doca. Possui graduação em Gestão da Tecnologia da Informação e especializações nas áreas de Educação a Distância, Governança de TI e Desenvolvimento de Sistemas. Atua no desenvolvimento de plataformas virtuais de aprendizagem e inovação educacional.</p>
-                <a href="http://lattes.cnpq.br/6985975186066123" target="_blank" class="lattes-link">
-                  <i class="fa-solid fa-id-card"></i> Currículo Lattes
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Jose Nunes -->
-          <div class="teacher-card">
-            <div class="teacher-card-content">
-              <img src="foto2.png" alt="Prof. Jose Nunes" class="teacher-avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Jose+Nunes&background=047857&color=00ff66';">
-              <div class="teacher-details">
-                <h4>Prof. Jose Nunes de Oliveira Neto</h4>
-                <span class="badge-role">[Mestre — Pesquisador]</span>
-                <p>Docente no IFMA Campus Zé Doca. Mestre e Bacharel em Ciência da Computação pela Universidade Federal do Maranhão (UFMA). Desenvolve pesquisas em Engenharia de Software, Desenvolvimento de Jogos Eletrônicos e Aplicações Imersivas.</p>
-                <a href="http://lattes.cnpq.br/8468789159798216" target="_blank" class="lattes-link">
-                  <i class="fa-solid fa-id-card"></i> Currículo Lattes
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Pedro Rodrigues -->
-          <div class="teacher-card">
-            <div class="teacher-card-content">
-              <img src="foto3.png" alt="Prof. Pedro Rodrigues" class="teacher-avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Pedro+Rodrigues&background=047857&color=00ff66';">
-              <div class="teacher-details">
-                <h4>Prof. Dr. Pedro Rodrigues da Silva Filho</h4>
-                <span class="badge-role">[Doutor — Pesquisador]</span>
-                <p>Professor efetivo do IFMA. Doutor em Matemática pela Universidade Federal do Piauí (UFPI, 2025), com mestrado e graduação na mesma instituição. Pesquisa na área de Matemática Aplicada, Métodos de Ponto Proximal, Otimização Multiobjetivo e Ensino de Matemática.</p>
-                <a href="http://lattes.cnpq.br/5760253624955991" target="_blank" class="lattes-link">
-                  <i class="fa-solid fa-id-card"></i> Currículo Lattes
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Elienai Stanley -->
-          <div class="teacher-card">
-            <div class="teacher-card-content">
-              <img src="foto4.png" alt="Prof. Elienai Stanley" class="teacher-avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Elienai+Stanley&background=047857&color=00ff66';">
-              <div class="teacher-details">
-                <h4>Prof. Elienai Stanley Barros de Sousa</h4>
-                <span class="badge-role">[Mestre — Pesquisador]</span>
-                <p>Professor de Matemática. Mestre em Matemática pela Universidade Estadual do Piauí (UESPI, 2020), graduado em Bacharelado e Licenciatura em Matemática pela Universidade Federal do Piauí (UFPI). Atua no ensino de Matemática com ênfase em Desigualdades e Resolução de Problemas Olímpicos.</p>
-                <a href="http://lattes.cnpq.br/8270726665093944" target="_blank" class="lattes-link">
-                  <i class="fa-solid fa-id-card"></i> Currículo Lattes
-                </a>
-              </div>
-            </div>
-          </div>
+          <div class="teacher-card"><div class="teacher-card-content">
+            <img src="foto1.png" class="teacher-avatar" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Elzimar+Carvalho&background=047857&color=00ff66';">
+            <div class="teacher-details"><h4>Prof. Elzimar José de Carvalho Neto</h4><span class="badge-role">[Especialista — Coordenador]</span>
+            <p>Professor do IFMA Zé Doca. Graduado em GTI, especialista em EaD, Governança de TI e Desenvolvimento de Sistemas.</p>
+            <a href="http://lattes.cnpq.br/6985975186066123" target="_blank" class="lattes-link"><i class="fa-solid fa-id-card"></i> Lattes</a></div>
+          </div></div>
+          <div class="teacher-card"><div class="teacher-card-content">
+            <img src="foto2.png" class="teacher-avatar" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Jose+Nunes&background=047857&color=00ff66';">
+            <div class="teacher-details"><h4>Prof. Jose Nunes de Oliveira Neto</h4><span class="badge-role">[Mestre — Pesquisador]</span>
+            <p>Mestre e Bacharel em Ciência da Computação (UFMA). Engenharia de Software e Jogos.</p>
+            <a href="http://lattes.cnpq.br/8468789159798216" target="_blank" class="lattes-link"><i class="fa-solid fa-id-card"></i> Lattes</a></div>
+          </div></div>
+          <div class="teacher-card"><div class="teacher-card-content">
+            <img src="foto3.png" class="teacher-avatar" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Pedro+Rodrigues&background=047857&color=00ff66';">
+            <div class="teacher-details"><h4>Prof. Dr. Pedro Rodrigues da Silva Filho</h4><span class="badge-role">[Doutor — Pesquisador]</span>
+            <p>Doutor em Matemática (UFPI, 2025). Otimização Multiobjetivo e Ensino de Matemática.</p>
+            <a href="http://lattes.cnpq.br/5760253624955991" target="_blank" class="lattes-link"><i class="fa-solid fa-id-card"></i> Lattes</a></div>
+          </div></div>
+          <div class="teacher-card"><div class="teacher-card-content">
+            <img src="foto4.png" class="teacher-avatar" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Elienai+Stanley&background=047857&color=00ff66';">
+            <div class="teacher-details"><h4>Prof. Elienai Stanley Barros de Sousa</h4><span class="badge-role">[Mestre — Pesquisador]</span>
+            <p>Mestre em Matemática (UESPI). Desigualdades e Problemas Olímpicos.</p>
+            <a href="http://lattes.cnpq.br/8270726665093944" target="_blank" class="lattes-link"><i class="fa-solid fa-id-card"></i> Lattes</a></div>
+          </div></div>
         </div>
-      </div>
 
-      <div class="tech-panel">
-        <div class="panel-header-title">
-          <i class="fa-solid fa-user-graduate"></i> DISCENTES PESQUISADORES
-        </div>
+        <h2 class="section-heading" style="margin-top:30px">Discentes Pesquisadores</h2>
         <div class="student-grid">
-          <div class="student-card">
-            <i class="fa-solid fa-graduation-cap" style="color: var(--neon-green); font-size: 2rem;"></i>
-            <div>
-              <strong style="color: var(--text-bright); font-size: 1.05rem; display: block;">Marcio Rogerio de Lima Silva</strong>
-              <span style="font-family: var(--font-tech); font-size: 0.82rem; color: var(--text-dim);">Licenciatura em Matemática — IFMA Zé Doca</span>
-            </div>
-          </div>
-
-          <div class="student-card">
-            <i class="fa-solid fa-graduation-cap" style="color: var(--neon-green); font-size: 2rem;"></i>
-            <div>
-              <strong style="color: var(--text-bright); font-size: 1.05rem; display: block;">VICTOR GABRIEL NUNES OLIVEIRA</strong>
-              <span style="font-family: var(--font-tech); font-size: 0.82rem; color: var(--text-dim);">Licenciatura em Matemática — IFMA Zé Doca</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Seção 3: Projetos -->
-    <div id="pane-projetos" class="tab-pane">
-      <!-- Linha de Desenvolvimento 1 -->
-      <div class="tech-panel">
-        <div class="panel-header-title">
-          <i class="fa-solid fa-headset"></i> LINHA DE DESENVOLVIMENTO: JOGOS EDUCACIONAIS 4.0
-        </div>
-        
-        <div class="project-console">
-          <div style="font-family: var(--font-tech); font-size: 0.82rem; color: var(--neon-green); margin-bottom: 10px;">
-            &gt; PROJECT_STATUS: ACTIVE // EXECUTION_READY
-          </div>
-          <h3 style="color: var(--text-bright); font-size: 1.35rem; margin-bottom: 12px;">Reconstrução de mini jogos com abordagem educacional</h3>
-          <p style="color: var(--text-dim); font-size: 1rem; line-height: 1.6; margin-bottom: 22px;">
-            Iniciativa voltada para a recriação, engenharia e adaptação de mecânicas clássicas de jogos em plataformas digitais interativas. O projeto explora a gamificação como ferramenta estratégica para estimular o raciocínio lógico, o aprendizado de algoritmos e o engajamento estudantil em conceitos complexos.
-          </p>
-          
-          <a href="https://maamute.com.br/glacial-compute/" target="_blank" class="btn-action-tech">
-            <i class="fa-solid fa-play"></i> EXECUTE GLACIAL COMPUTE: RUN MAAMUTE
-          </a>
+          <div class="student-card"><i class="fa-solid fa-graduation-cap" style="color:var(--neon-green);font-size:1.8rem"></i>
+            <div><strong>Marcio Rogerio de Lima Silva</strong><br><span style="font-family:var(--font-tech);font-size:.8rem;color:var(--text-dim)">Lic. em Matemática — IFMA Zé Doca</span></div></div>
+          <div class="student-card"><i class="fa-solid fa-graduation-cap" style="color:var(--neon-green);font-size:1.8rem"></i>
+            <div><strong>Victor Gabriel Nunes Oliveira</strong><br><span style="font-family:var(--font-tech);font-size:.8rem;color:var(--text-dim)">Lic. em Matemática — IFMA Zé Doca</span></div></div>
         </div>
       </div>
 
-      <!-- Linha de Desenvolvimento 2 -->
-      <div class="tech-panel">
-        <div class="panel-header-title">
-          <i class="fa-solid fa-server"></i> LINHA DE DESENVOLVIMENTO: SISTEMAS DE GERENCIAMENTO
-        </div>
-        
-        <div class="project-console">
-          <div style="font-family: var(--font-tech); font-size: 0.82rem; color: var(--neon-green); margin-bottom: 10px;">
-            &gt; PROJECT_STATUS: ACTIVE // OPERATIONAL
+      <div id="pane-projetos" class="tab-pane">
+        <div class="page-title">// PROJETOS</div>
+        <h2 class="section-heading">Linhas de Desenvolvimento</h2>
+        <div class="tech-panel">
+          <div class="panel-header-title"><i class="fa-solid fa-headset"></i> Jogos Educacionais 4.0</div>
+          <div class="project-console">
+            <div style="font-family:var(--font-tech);font-size:.8rem;color:var(--neon-green);margin-bottom:10px">&gt; STATUS: ACTIVE</div>
+            <h3 style="margin-bottom:10px">Reconstrução de mini jogos com abordagem educacional</h3>
+            <p style="color:var(--text-dim);margin-bottom:18px">Recriação de mecânicas clássicas em plataformas interativas, explorando gamificação para estimular lógica e algoritmos.</p>
+            <a href="https://maamute.com.br/glacial-compute/" target="_blank" class="btn-action-tech"><i class="fa-solid fa-play"></i> ACESSAR GLACIAL COMPUTE</a>
           </div>
-          <h3 style="color: var(--text-bright); font-size: 1.35rem; margin-bottom: 12px;">LABDECK - Sistema de Gerenciamento de Laboratórios</h3>
-          <p style="color: var(--text-dim); font-size: 1rem; line-height: 1.6; margin-bottom: 22px;">
-            Este sistema centraliza o agendamento e a gestão dos laboratórios do Campus Zé Doca do IFMA, otimizando o fluxo de trabalho acadêmico, o uso compartilhado de espaços e a organização das atividades de ensino, pesquisa e extensão.
-          </p>
-          
-          <a href="https://maamute.com.br/labdeck-zdc/" target="_blank" class="btn-action-tech">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i> ACESSAR LABDECK ZÉ DOCA
-          </a>
+        </div>
+        <div class="tech-panel">
+          <div class="panel-header-title"><i class="fa-solid fa-server"></i> Sistemas de Gerenciamento</div>
+          <div class="project-console">
+            <div style="font-family:var(--font-tech);font-size:.8rem;color:var(--neon-green);margin-bottom:10px">&gt; STATUS: OPERATIONAL</div>
+            <h3 style="margin-bottom:10px">LABDECK - Gerenciamento de Laboratórios</h3>
+            <p style="color:var(--text-dim);margin-bottom:18px">Sistema que centraliza agendamento e gestão dos laboratórios do Campus Zé Doca.</p>
+            <a href="https://maamute.com.br/labdeck-zdc/" target="_blank" class="btn-action-tech"><i class="fa-solid fa-arrow-up-right-from-square"></i> ACESSAR LABDECK</a>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Seção 4: Objetivos -->
-    <div id="pane-objetivos" class="tab-pane">
-      <div class="tech-panel">
-        <div class="panel-header-title">
-          <i class="fa-solid fa-bullseye"></i> OBJETIVOS INSTITUCIONAIS & DIRETRIZES
-        </div>
-        
+      <div id="pane-objetivos" class="tab-pane">
+        <div class="page-title">// OBJETIVOS</div>
+        <h2 class="section-heading">Diretrizes Institucionais</h2>
         <div class="goals-container">
-          <div class="goal-box">
-            <i class="fa-solid fa-code"></i>
-            <div>
-              <h4>Desenvolvimento de Softwares & Recursos Abertos</h4>
-              <p>Criar plataformas digitais, jogos interativos, simuladores e ferramentas virtuais voltadas ao ensino prático de Matemática e Computação, disponibilizando os códigos em formato aberto para uso público.</p>
-            </div>
-          </div>
-
-          <div class="goal-box">
-            <i class="fa-solid fa-flask"></i>
-            <div>
-              <h4>Iniciação Científica & Formação Acadêmica</h4>
-              <p>Engajar estudantes dos cursos técnicos integrados e de licenciatura do IFMA Campus Zé Doca em projetos de PIBIC, PIBITI, Residência Pedagógica e TCC, fortalecendo a formação acadêmica e profissional da região.</p>
-            </div>
-          </div>
-
-          <div class="goal-box">
-            <i class="fa-solid fa-brain"></i>
-            <div>
-              <h4>Inteligência Artificial & Tecnologias Emergentes</h4>
-              <p>Pesquisar, adaptar e implementar métodos de Aprendizado de Máquina, Inteligência Artificial e gamificação no processo de ensino-aprendizagem, modernizando as metodologias educacionais aplicadas.</p>
-            </div>
-          </div>
-
-          <div class="goal-box">
-            <i class="fa-solid fa-handshake"></i>
-            <div>
-              <h4>Integração do Tripé Ensino, Pesquisa e Extensão</h4>
-              <p>Transferir o conhecimento gerado no laboratório para a comunidade escolar local e a sociedade, promovendo minicursos, oficinas e ferramentas acessíveis para a microrregião do Alto Turi.</p>
-            </div>
-          </div>
+          <div class="goal-box"><i class="fa-solid fa-code"></i><div><h4>Softwares & Recursos Abertos</h4><p>Plataformas, jogos e simuladores com código aberto ao público.</p></div></div>
+          <div class="goal-box"><i class="fa-solid fa-flask"></i><div><h4>Iniciação Científica</h4><p>PIBIC, PIBITI, Residência Pedagógica e TCC.</p></div></div>
+          <div class="goal-box"><i class="fa-solid fa-brain"></i><div><h4>IA & Tecnologias Emergentes</h4><p>Aprendizado de Máquina e gamificação no ensino.</p></div></div>
+          <div class="goal-box"><i class="fa-solid fa-handshake"></i><div><h4>Ensino, Pesquisa e Extensão</h4><p>Minicursos e oficinas para a comunidade do Alto Turi.</p></div></div>
         </div>
       </div>
+
     </div>
 
-    <!-- Rodapé -->
-    <footer class="tech-footer-centered">
-      Desenvolvido por Grupo MAAMUTE. © Copyright 2026, All Rights Reserved.
-    </footer>
+    <!-- FOOTER FIXO NA PARTE DE BAIXO -->
+    <footer class="tech-footer-centered">Desenvolvido por Grupo MAAMUTE. © Copyright 2026, All Rights Reserved.</footer>
+  </main>
+</div>
 
-  </div>
-
-  <!-- Botão Flutuante (FAB) -->
-  <button class="floating-theme-btn" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Alternar Tema">
-    <i class="fa-solid fa-moon" id="themeIcon"></i>
-    <span id="themeText">Modo Escuro</span>
-  </button>
-
-  <script>
-    function switchTechTab(tabKey, evt) {
-      document.querySelectorAll('.tab-pane').forEach(pane => {
-        pane.classList.remove('active');
-      });
-
-      document.querySelectorAll('.console-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-
-      document.getElementById('pane-' + tabKey).classList.add('active');
-      if (evt && evt.currentTarget) {
-        evt.currentTarget.classList.add('active');
-      }
-    }
-
-    function toggleTheme() {
-      const body = document.body;
-      const currentTheme = body.getAttribute('data-theme');
-      const themeIcon = document.getElementById('themeIcon');
-      const themeText = document.getElementById('themeText');
-
-      if (currentTheme === 'light') {
-        body.removeAttribute('data-theme');
-        themeIcon.className = 'fa-solid fa-moon';
-        themeText.innerText = 'Modo Escuro';
-        localStorage.setItem('theme', 'dark');
-      } else {
-        body.setAttribute('data-theme', 'light');
-        themeIcon.className = 'fa-solid fa-sun';
-        themeText.innerText = 'Modo Claro';
-        localStorage.setItem('theme', 'light');
-      }
-    }
-
-    (function initTheme() {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'light') {
-        document.body.setAttribute('data-theme', 'light');
-        document.getElementById('themeIcon').className = 'fa-solid fa-sun';
-        document.getElementById('themeText').innerText = 'Modo Claro';
-      }
-    })();
-  </script>
+<script>
+function switchTechTab(k,e){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.console-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pane-'+k).classList.add('active');
+  if(e&&e.currentTarget)e.currentTarget.classList.add('active');
+}
+function toggleTheme(){
+  const b=document.body,cur=b.getAttribute('data-theme'),i=document.getElementById('themeIcon'),t=document.getElementById('themeText');
+  if(cur==='light'){b.removeAttribute('data-theme');i.className='fa-solid fa-moon';t.innerText='Modo Escuro';localStorage.setItem('theme','dark');}
+  else{b.setAttribute('data-theme','light');i.className='fa-solid fa-sun';t.innerText='Modo Claro';localStorage.setItem('theme','light');}
+}
+(function(){const s=localStorage.getItem('theme');if(s==='light'){document.body.setAttribute('data-theme','light');document.getElementById('themeIcon').className='fa-solid fa-sun';document.getElementById('themeText').innerText='Modo Claro';}})();
+</script>
 </body>
 </html>
