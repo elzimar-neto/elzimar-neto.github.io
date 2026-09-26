@@ -330,6 +330,13 @@
       border: 1px solid var(--border-tech);
       border-radius: 14px;
       padding: 22px;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .teacher-card-content {
+      display: flex;
+      gap: 20px;
     }
 
     .teacher-card:hover {
@@ -369,6 +376,27 @@
       font-size: 0.9rem;
       color: var(--text-dim);
       line-height: 1.5;
+    }
+
+    .lattes-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      font-family: var(--font-tech);
+      font-size: 0.8rem;
+      color: var(--neon-green);
+      text-decoration: none;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid var(--border-tech);
+      padding: 6px 12px;
+      border-radius: 6px;
+      width: fit-content;
+    }
+
+    .lattes-link:hover {
+      background: var(--neon-green);
+      color: #000;
     }
 
     .student-grid {
@@ -503,7 +531,7 @@
       .teacher-grid {
         grid-template-columns: 1fr;
       }
-      .teacher-card {
+      .teacher-card-content {
         flex-direction: column;
       }
       .floating-theme-btn {
@@ -603,41 +631,61 @@
         <div class="teacher-grid">
           <!-- Elzimar -->
           <div class="teacher-card">
-            <img src="foto1.png" alt="Prof. Elzimar" class="teacher-avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Elzimar+Carvalho&background=047857&color=00ff66';">
-            <div class="teacher-details">
-              <h4>Prof. Elzimar José de Carvalho Neto</h4>
-              <span class="badge-role">[Especialista — Coordenador]</span>
-              <p>Professor do IFMA Campus Zé Doca[cite: 10]. Possui graduação em Gestão da Tecnologia da Informação e especializações nas áreas de Educação a Distância, Governança de TI e Desenvolvimento de Sistemas[cite: 10]. Atua no desenvolvimento de plataformas virtuais de aprendizagem e inovação educacional[cite: 10].</p>
+            <div class="teacher-card-content">
+              <img src="foto1.png" alt="Prof. Elzimar" class="teacher-avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Elzimar+Carvalho&background=047857&color=00ff66';">
+              <div class="teacher-details">
+                <h4>Prof. Elzimar José de Carvalho Neto</h4>
+                <span class="badge-role">[Especialista — Coordenador]</span>
+                <p>Professor do IFMA Campus Zé Doca. Possui graduação em Gestão da Tecnologia da Informação e especializações nas áreas de Educação a Distância, Governança de TI e Desenvolvimento de Sistemas. Atua no desenvolvimento de plataformas virtuais de aprendizagem e inovação educacional.</p>
+                <a href="http://lattes.cnpq.br/6985975186066123" target="_blank" class="lattes-link">
+                  <i class="fa-solid fa-id-card"></i> Currículo Lattes
+                </a>
+              </div>
             </div>
           </div>
 
           <!-- Jose Nunes -->
           <div class="teacher-card">
-            <img src="foto2.png" alt="Prof. Jose Nunes" class="teacher-avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Jose+Nunes&background=047857&color=00ff66';">
-            <div class="teacher-details">
-              <h4>Prof. Jose Nunes de Oliveira Neto</h4>
-              <span class="badge-role">[Mestre — Pesquisador]</span>
-              <p>Docente no IFMA Campus Zé Doca. Mestre e Bacharel em Ciência da Computação pela Universidade Federal do Maranhão (UFMA)[cite: 9]. Desenvolve pesquisas em Engenharia de Software, Desenvolvimento de Jogos Eletrônicos e Aplicações Imersivas[cite: 9].</p>
+            <div class="teacher-card-content">
+              <img src="foto2.png" alt="Prof. Jose Nunes" class="teacher-avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Jose+Nunes&background=047857&color=00ff66';">
+              <div class="teacher-details">
+                <h4>Prof. Jose Nunes de Oliveira Neto</h4>
+                <span class="badge-role">[Mestre — Pesquisador]</span>
+                <p>Docente no IFMA Campus Zé Doca. Mestre e Bacharel em Ciência da Computação pela Universidade Federal do Maranhão (UFMA). Desenvolve pesquisas em Engenharia de Software, Desenvolvimento de Jogos Eletrônicos e Aplicações Imersivas.</p>
+                <a href="http://lattes.cnpq.br/8468789159798216" target="_blank" class="lattes-link">
+                  <i class="fa-solid fa-id-card"></i> Currículo Lattes
+                </a>
+              </div>
             </div>
           </div>
 
-          <!-- Pedro Rodrigues (Doutor) -->
+          <!-- Pedro Rodrigues -->
           <div class="teacher-card">
-            <img src="foto3.png" alt="Prof. Pedro Rodrigues" class="teacher-avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Pedro+Rodrigues&background=047857&color=00ff66';">
-            <div class="teacher-details">
-              <h4>Prof. Dr. Pedro Rodrigues da Silva Filho</h4>
-              <span class="badge-role">[Doutor — Pesquisador]</span>
-              <p>Professor efetivo do IFMA[cite: 11]. Doutor em Matemática pela Universidade Federal do Piauí (UFPI, 2025), com mestrado e graduação na mesma instituição[cite: 11]. Pesquisa na área de Matemática Aplicada, Métodos de Ponto Proximal, Otimização Multiobjetivo e Ensino de Matemática[cite: 11].</p>
+            <div class="teacher-card-content">
+              <img src="foto3.png" alt="Prof. Pedro Rodrigues" class="teacher-avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Pedro+Rodrigues&background=047857&color=00ff66';">
+              <div class="teacher-details">
+                <h4>Prof. Dr. Pedro Rodrigues da Silva Filho</h4>
+                <span class="badge-role">[Doutor — Pesquisador]</span>
+                <p>Professor efetivo do IFMA. Doutor em Matemática pela Universidade Federal do Piauí (UFPI, 2025), com mestrado e graduação na mesma instituição. Pesquisa na área de Matemática Aplicada, Métodos de Ponto Proximal, Otimização Multiobjetivo e Ensino de Matemática.</p>
+                <a href="http://lattes.cnpq.br/5760253624955991" target="_blank" class="lattes-link">
+                  <i class="fa-solid fa-id-card"></i> Currículo Lattes
+                </a>
+              </div>
             </div>
           </div>
 
-          <!-- Elienai Stanley (Mestre) -->
+          <!-- Elienai Stanley -->
           <div class="teacher-card">
-            <img src="foto4.png" alt="Prof. Elienai Stanley" class="teacher-avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Elienai+Stanley&background=047857&color=00ff66';">
-            <div class="teacher-details">
-              <h4>Prof. Elienai Stanley Barros de Sousa</h4>
-              <span class="badge-role">[Mestre — Pesquisador]</span>
-              <p>Professor de Matemática[cite: 12]. Mestre em Matemática pela Universidade Estadual do Piauí (UESPI, 2020), graduado em Bacharelado e Licenciatura em Matemática pela Universidade Federal do Piauí (UFPI)[cite: 12]. Atua no ensino de Matemática com ênfase em Desigualdades e Resolução de Problemas Olímpicos[cite: 12].</p>
+            <div class="teacher-card-content">
+              <img src="foto4.png" alt="Prof. Elienai Stanley" class="teacher-avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Elienai+Stanley&background=047857&color=00ff66';">
+              <div class="teacher-details">
+                <h4>Prof. Elienai Stanley Barros de Sousa</h4>
+                <span class="badge-role">[Mestre — Pesquisador]</span>
+                <p>Professor de Matemática. Mestre em Matemática pela Universidade Estadual do Piauí (UESPI, 2020), graduado em Bacharelado e Licenciatura em Matemática pela Universidade Federal do Piauí (UFPI). Atua no ensino de Matemática com ênfase em Desigualdades e Resolução de Problemas Olímpicos.</p>
+                <a href="http://lattes.cnpq.br/8270726665093944" target="_blank" class="lattes-link">
+                  <i class="fa-solid fa-id-card"></i> Currículo Lattes
+                </a>
+              </div>
             </div>
           </div>
         </div>
