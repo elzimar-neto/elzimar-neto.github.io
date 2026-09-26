@@ -1,673 +1,1408 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAAMUTE-TURI | Grupo de Pesquisa IFMA Zé Doca</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                            dark: '#0a2e19'
-                        },
-                        ifma: {
-                            red: '#e31b23',
-                            green: '#008744'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>GLACIAL COMPUTE: RUM MAAMUTE</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; min-height:100%; }
+  body {
+    background: linear-gradient(to bottom, #bfe3f0 0%, #eaf6ff 60%, #ffffff 100%);
+    display:flex; flex-direction:column; align-items:center;
+    font-family: 'Trebuchet MS', sans-serif;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+  }
+  header { width:100%; background:#134611; color:white; text-align:center; padding:14px 0 10px; box-shadow:0 3px 6px rgba(0,0,0,.3); }
+  header h1 { margin:0; font-size:24px; letter-spacing:1px; }
+  header h1 .glacial { color:#8bc34a; }
+  header h1 .rum { color:#f0c419; }
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f2d1e 0%, #061a10 50%, #020c07 100%);
-            min-height: 100vh;
-            color: #f3f4f6;
-        }
+  #colunaJogo { width:95vw; max-width:1400px; display:flex; flex-direction:column; align-items:center; margin-top:8px; }
+  #hud { display:flex; justify-content:space-between; width:100%; font-size:20px; color:#134611; font-weight:bold; }
+  #canvasWrap { position:relative; width:100%; margin-top:6px; }
+  canvas {
+    background: transparent; border:5px solid #134611; border-radius:16px;
+    width:100%; height:100%; display:block; box-shadow:0 6px 15px rgba(0,0,0,.25);
+    transition: transform 0.05s;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  canvas.shake { animation: shakeAnim 0.5s; }
+  @keyframes shakeAnim {
+    0% { transform: translate(0,0); }
+    10% { transform: translate(-10px,-6px) rotate(-1deg); }
+    20% { transform: translate(10px,6px) rotate(1deg); }
+    30% { transform: translate(-8px,4px) rotate(-1deg); }
+    40% { transform: translate(8px,-4px) rotate(1deg); }
+    50% { transform: translate(-6px,6px); }
+    60% { transform: translate(6px,-6px); }
+    70% { transform: translate(-4px,2px); }
+    80% { transform: translate(4px,-2px); }
+    100% { transform: translate(0,0); }
+  }
+  #flashChoque {
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    background:rgba(255,0,0,0.25); pointer-events:none; opacity:0; border-radius:16px;
+  }
+  #flashChoque.ativo { animation: flashAnim 1s; }
+  @keyframes flashAnim { 0%{opacity:1;} 100%{opacity:0;} }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-        }
+  #telaInicio {
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    background:rgba(19,70,17,0.55); display:flex; align-items:center; justify-content:center;
+    border-radius:12px; z-index:5; cursor:pointer;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+    pointer-events: auto;
+  }
+  #telaInicio p {
+    color:white; font-size:22px; font-weight:bold; text-align:center;
+    text-shadow:0 2px 4px rgba(0,0,0,.4); padding:0 20px;
+    pointer-events: none;
+  }
 
-        .glass-card-bright {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #1f2937;
-        }
+  #rankingOverlay {
+    position:absolute; top:12px; right:12px; width:200px;
+    background:rgba(255,255,255,0.6); border:2px solid rgba(19,70,17,0.6);
+    border-radius:12px; padding:8px; backdrop-filter: blur(2px);
+  }
+  #rankingOverlay h3 { margin:0 0 6px; color:#134611; text-align:center; font-size:14px; }
+  #rankingOverlay .item { display:flex; justify-content:space-between; color:#134611; font-size:12px; padding:2px 0; }
 
-        .tab-active {
-            background-color: #16a34a !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 14px 0 rgba(22, 163, 74, 0.39);
-        }
+  #dica { color:#134611; font-size:14px; margin-top:4px; }
 
-        .pulse-subtle {
-            animation: pulse 3s infinite ease-in-out;
-        }
+  footer {
+    width:100%; background:#134611; color:#cfe6c9; text-align:center;
+    font-size:13px; padding:12px 0; margin-top:16px;
+  }
+  footer strong { color:#8bc34a; }
+  footer a { color:#8bc34a; text-decoration:none; font-weight:bold; }
+  footer a:hover { text-decoration:underline; }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.95; transform: scale(1.01); }
-        }
+  #feedback {
+    display:none; position:fixed; top:20%; left:50%; transform:translate(-50%,-50%);
+    font-size:34px; font-weight:bold; padding:14px 26px; border-radius:14px;
+    z-index:20; box-shadow:0 6px 14px rgba(0,0,0,.3);
+  }
+  #feedback.certo { background:#c8e6c9; color:#1b5e20; }
+  #feedback.errado { background:#ffcdd2; color:#b71c1c; }
+  #quiz, #rankingBox {
+    display:none; position:fixed; top:35%; left:50%; transform:translate(-50%,-50%);
+    background:white; border:4px solid #134611; padding:25px 35px; border-radius:16px;
+    text-align:center; box-shadow:0 8px 20px rgba(0,0,0,.4); z-index:10; max-width:90vw;
+  }
+  #quiz p, #rankingBox p { font-size:22px; color:#134611; margin-bottom:15px; }
+  #quiz button, #rankingBox button {
+    margin:6px; padding:10px 18px; font-size:18px; cursor:pointer;
+    border:none; border-radius:8px; background:#134611; color:white; transition:.2s;
+  }
+  #quiz button:hover, #rankingBox button:hover { background:#c0392b; }
+  #rankingBox input { font-size:18px; padding:6px; border-radius:6px; border:2px solid #134611; }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a2e19;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #16a34a;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #22c55e;
-        }
-    </style>
+  #erroFirebase {
+    display:none; background:#ffcdd2; color:#b71c1c; font-size:13px;
+    padding:8px; border-radius:8px; margin:8px 0; text-align:left; word-break: break-word;
+  }
+  #statusSalvar { font-size:13px; margin-top:6px; min-height:18px; font-weight:bold; }
+
+  #timerBarra {
+    width: 100%; height: 10px; background:#e0e0e0; border-radius:6px;
+    margin-top:10px; overflow:hidden;
+  }
+  #timerPreenchimento {
+    height:100%; background:#2e7d32; width:100%; transition: width 0.1s linear;
+  }
+  #timerPreenchimento.urgente { background:#c0392b; }
+  #timerTexto { color:#134611; font-size:16px; margin-top:4px; font-weight:bold; }
+
+  #rankingCompletoModal {
+    display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.5); z-index:30; justify-content:center; align-items:center;
+  }
+  #rankingCompletoModal.aberto { display:flex; }
+  #rankingCompletoModal .caixa {
+    background:white; border:4px solid #134611; border-radius:16px;
+    padding:25px 30px; max-width:90vw; max-height:85vh; overflow-y:auto;
+    box-shadow:0 8px 20px rgba(0,0,0,.4);
+  }
+  #listaRankingCompleta { text-align:left; min-width:280px; }
+  #listaRankingCompleta .linha {
+    border-bottom:1px solid #ccc; padding:6px 4px; color:#134611;
+    font-size:14px; display:flex; justify-content:space-between; gap:12px;
+  }
+
+  #bannerRecorde {
+    display:none; position:fixed; top:0; left:0; width:100%; z-index:40;
+    background:linear-gradient(90deg, #f0c419, #e74c3c, #8bc34a, #f0c419);
+    background-size: 300% 100%;
+    animation: moverGradiente 3s linear infinite, cairBanner 0.5s ease-out;
+    color:white; text-align:center; padding:16px 10px; font-size:24px; font-weight:bold;
+    box-shadow:0 4px 12px rgba(0,0,0,.4); text-shadow:0 2px 3px rgba(0,0,0,.4);
+  }
+  #bannerRecorde.mostrar { display:block; }
+  @keyframes moverGradiente {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+  }
+  @keyframes cairBanner {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(0); }
+  }
+  .confete {
+    position:fixed; top:-20px; width:10px; height:16px; z-index:39;
+    opacity:0.9; pointer-events:none;
+    animation: cair linear forwards;
+  }
+  @keyframes cair {
+    0% { transform: translateY(0) rotate(0deg); opacity:1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity:0.9; }
+  }
+
+  #avisoGirar {
+    display:none;
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:#134611; z-index:9999;
+    flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:20px; color:white;
+  }
+  #avisoGirar .icone {
+    font-size:70px; margin-bottom:20px;
+    animation: girarIcone 1.6s ease-in-out infinite;
+  }
+  @keyframes girarIcone {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(90deg); }
+    100% { transform: rotate(0deg); }
+  }
+  #avisoGirar h2 { margin:0 0 10px; font-size:22px; color:#8bc34a; }
+  #avisoGirar p { margin:0; font-size:16px; max-width:320px; }
+
+  @media (max-width: 900px) and (orientation: portrait) {
+    #avisoGirar { display:flex; }
+    header, #colunaJogo, footer, #bannerRecorde,
+    #feedback, #quiz, #rankingBox, #rankingCompletoModal {
+      display:none !important;
+    }
+  }
+
+  @media (max-height: 500px) and (orientation: landscape) {
+    header { padding:4px 0 3px; }
+    header h1 { font-size:15px; }
+    footer { display:none; }
+    #colunaJogo { margin-top:2px; }
+    #hud { font-size:13px; }
+    #dica { font-size:11px; margin-top:2px; }
+    #rankingOverlay { width:110px; padding:4px; top:6px; right:6px; }
+    #rankingOverlay h3 { font-size:11px; margin-bottom:3px; }
+    #rankingOverlay .item { font-size:10px; }
+    #telaInicio p { font-size:16px; }
+    canvas { border-width:3px; }
+  }
+
+  @media (max-height: 420px) and (orientation: landscape) {
+    header { display:none; }
+    #dica { display:none; }
+    #rankingOverlay { width:90px; }
+    #rankingOverlay h3 { display:none; }
+  }
+</style>
 </head>
-<body class="p-3 md:p-6 lg:p-10 flex flex-col items-center justify-start min-h-screen relative overflow-x-hidden">
+<body>
 
-    <div class="fixed top-[-10%] left-[-10%] w-96 h-96 bg-brand-600/20 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="fixed bottom-[-10%] right-[-10%] w-[30rem] h-[30rem] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<div id="avisoGirar">
+  <div class="icone">📱</div>
+  <h2>Gire o celular</h2>
+  <p>Para jogar GLACIAL COMPUTE: RUM MAAMUTE, por favor deixe seu celular na posição horizontal (paisagem).</p>
+</div>
 
-    <div class="w-full max-w-5xl z-10 space-y-6">
+<header>
+  <h1><span class="glacial">GLACIAL COMPUTE</span>: <span class="rum">RUM MAAMUTE</span></h1>
+</header>
 
-        <!-- Header / Digital Business Card Hero -->
-        <header class="glass-card rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden transition-all duration-300">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-brand-500/10 rounded-full blur-2xl pointer-events-none"></div>
-            
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                <!-- Mascot & Branding -->
-                <div class="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
-                    <!-- Embedded SVG Mammoth Mascot Artwork -->
-                    <div class="relative group">
-                        <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl bg-gradient-to-br from-brand-700 to-brand-900 border-2 border-brand-500/40 p-2 flex items-center justify-center shadow-lg group-hover:border-brand-400 transition-all duration-300">
-                            <svg viewBox="0 0 500 500" class="w-full h-full drop-shadow-md">
-                                <!-- Background circle glow -->
-                                <circle cx="250" cy="250" r="230" fill="none" stroke="#22c55e" stroke-width="4" stroke-dasharray="10 5" opacity="0.3" />
-                                <!-- Mammoth SVG Representation matching Logo MAAMUTE -->
-                                <g fill="#16a34a" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <!-- Body -->
-                                    <path d="M 120 340 C 90 320 80 250 110 200 C 140 150 200 130 260 140 C 310 150 350 180 370 230 C 380 260 380 300 370 340 L 340 340 L 330 280 C 310 280 300 320 290 340 L 260 340 L 260 270 C 230 270 210 320 190 340 Z" fill="#15803d"/>
-                                    <!-- Head & Fur Details -->
-                                    <path d="M 260 140 C 280 110 330 110 360 140 C 380 160 390 190 380 230 C 350 210 320 200 290 210 Z" fill="#16a34a"/>
-                                    <!-- Star on forehead -->
-                                    <polygon points="330,150 334,162 346,162 336,170 340,182 330,174 320,182 324,170 314,162 326,162" fill="#ffffff" stroke="none"/>
-                                    <!-- Elephant Eye -->
-                                    <circle cx="310" cy="185" r="5" fill="#ffffff" stroke="none"/>
-                                    <!-- Mammoth Tusks (Curved) -->
-                                    <path d="M 370 250 C 430 250 480 200 450 150 C 440 180 400 220 360 230 Z" fill="#ffffff" stroke="#15803d" stroke-width="2"/>
-                                    <path d="M 350 260 C 400 270 440 230 420 180 C 400 210 370 230 340 240 Z" fill="#f3f4f6" stroke="#15803d" stroke-width="2"/>
-                                    <!-- Trunk Spiral -->
-                                    <path d="M 360 230 C 370 280 380 310 350 330 C 320 350 280 330 300 300 C 310 280 340 290 330 310" fill="none" stroke="#16a34a" stroke-width="22" stroke-linecap="round"/>
-                                    <path d="M 360 230 C 370 280 380 310 350 330 C 320 350 280 330 300 300 C 310 280 340 290 330 310" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
-                                </g>
-                            </svg>
-                        </div>
-                        <span class="absolute -bottom-2 -right-2 bg-brand-600 text-xs font-bold text-white px-2 py-0.5 rounded-full border border-white/20">
-                            IFMA
-                        </span>
-                    </div>
+<div id="bannerRecorde">🎉 NOVO RECORDE! 🎉</div>
 
-                    <!-- Title & Subtitle -->
-                    <div>
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 text-xs font-semibold uppercase tracking-wider mb-2 border border-brand-500/30">
-                            <i class="fa-solid fa-flask text-brand-400"></i> Grupo de Pesquisa & Estudos
-                        </div>
-                        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
-                            MAAMUTE <span class="text-brand-400">- TURI</span>
-                        </h1>
-                        <p class="text-xs sm:text-sm text-gray-300 mt-1 max-w-lg leading-relaxed font-light">
-                            Modelagem Aplicada, Algoritmos, Matemática e Uso de Tecnologias Educacionais do Alto Turi
-                        </p>
-                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-3 text-xs text-gray-400">
-                            <span class="flex items-center gap-1 bg-white/5 px-2.5 py-1 rounded-lg border border-white/10">
-                                <i class="fa-solid fa-location-dot text-brand-400"></i> IFMA Campus Zé Doca
-                            </span>
-                            <span class="flex items-center gap-1 bg-white/5 px-2.5 py-1 rounded-lg border border-white/10">
-                                <i class="fa-solid fa-award text-brand-400"></i> Diretoria de Ensino
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Official Logos Column (IFMA Logo SVG & Quick Actions) -->
-                <div class="flex flex-col items-center md:items-end gap-3 w-full md:w-auto border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-6">
-                    <!-- IFMA Brand Badge -->
-                    <div class="bg-white/95 rounded-xl p-3 text-gray-900 shadow-md flex items-center gap-3 w-full sm:w-auto">
-                        <!-- IFMA Emblem SVG -->
-                        <div class="w-10 h-12 flex-shrink-0">
-                            <svg viewBox="0 0 100 120" class="w-full h-full">
-                                <!-- Red Circle -->
-                                <circle cx="20" cy="20" r="16" fill="#e31b23"/>
-                                <!-- Green Squares Grid -->
-                                <rect x="42" y="4" width="26" height="26" rx="4" fill="#008744"/>
-                                <rect x="74" y="4" width="26" height="26" rx="4" fill="#008744"/>
-                                <rect x="42" y="36" width="26" height="26" rx="4" fill="#008744"/>
-                                <rect x="42" y="68" width="26" height="26" rx="4" fill="#008744"/>
-                                <rect x="74" y="68" width="26" height="26" rx="4" fill="#008744"/>
-                                <rect x="10" y="36" width="26" height="26" rx="4" fill="#008744"/>
-                                <rect x="10" y="68" width="26" height="26" rx="4" fill="#008744"/>
-                                <rect x="10" y="100" width="26" height="26" rx="4" fill="#008744"/>
-                                <rect x="42" y="100" width="26" height="26" rx="4" fill="#008744"/>
-                            </svg>
-                        </div>
-                        <div class="text-left text-xs leading-tight">
-                            <span class="font-black text-black block tracking-tighter text-sm">INSTITUTO FEDERAL</span>
-                            <span class="text-gray-700 font-medium block">Maranhão</span>
-                            <span class="text-brand-800 font-bold block text-[10px]">Campus Zé Doca</span>
-                        </div>
-                    </div>
-
-                    <!-- Quick Contact / Copy Info Action -->
-                    <div class="flex items-center gap-2 w-full sm:w-auto">
-                        <button onclick="copyGroupInfo()" class="w-full sm:w-auto flex-1 bg-brand-600 hover:bg-brand-500 text-white px-4 py-2 rounded-xl font-medium text-xs flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95">
-                            <i class="fa-regular fa-copy"></i>
-                            <span id="copyBtnText">Copiar Cartão do Grupo</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Navigation Tabs -->
-        <nav class="glass-card rounded-2xl p-2 flex flex-wrap gap-2 justify-center sm:justify-start">
-            <button onclick="switchTab('visao-geral')" id="tab-visao-geral" class="tab-btn tab-active px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all duration-200">
-                <i class="fa-solid fa-compass"></i> Visão Geral
-            </button>
-            <button onclick="switchTab('equipe')" id="tab-equipe" class="tab-btn text-gray-300 hover:bg-white/10 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all duration-200">
-                <i class="fa-solid fa-users"></i> Equipe Docente
-            </button>
-            <button onclick="switchTab('objetivos')" id="tab-objetivos" class="tab-btn text-gray-300 hover:bg-white/10 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all duration-200">
-                <i class="fa-solid fa-bullseye"></i> Objetivos
-            </button>
-            <button onclick="switchTab('cursos')" id="tab-cursos" class="tab-btn text-gray-300 hover:bg-white/10 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all duration-200">
-                <i class="fa-solid fa-graduation-cap"></i> Matriz por Cursos
-            </button>
-            <button onclick="switchTab('stack')" id="tab-stack" class="tab-btn text-gray-300 hover:bg-white/10 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all duration-200">
-                <i class="fa-solid fa-code"></i> Stack & Regimento
-            </button>
-        </nav>
-
-        <!-- Tab Content Containers -->
-        <main class="space-y-6">
-
-            <!-- TAB 1: VISÃO GERAL -->
-            <section id="content-visao-geral" class="tab-content block space-y-6">
-                <!-- Apresentação Card -->
-                <div class="glass-card rounded-3xl p-6 md:p-8 space-y-4">
-                    <div class="flex items-center gap-3 text-brand-400">
-                        <i class="fa-solid fa-book-open text-xl"></i>
-                        <h2 class="text-xl font-bold text-white">Apresentação e Justificativa</h2>
-                    </div>
-                    <p class="text-gray-300 leading-relaxed text-sm md:text-base font-light">
-                        O <strong class="text-white font-semibold">Grupo de Pesquisa e Estudos MAAMUTE TURI</strong> (Modelagem Aplicada, Algoritmos, Matemática e Uso de Tecnologias Educacionais do Alto Turi), do <strong class="text-brand-300">IFMA - Campus Zé Doca</strong>, é formado por pesquisadores das áreas de Computação, Matemática, Educação e correlatas, articulando estudantes do Ensino Médio-Profissionalizante, graduandos em Licenciatura em Matemática, Licenciatura em Química e cursos tecnológicos.
-                    </p>
-                    <p class="text-gray-300 leading-relaxed text-sm md:text-base font-light">
-                        O grupo se propõe a desenvolver pesquisas, softwares educacionais e modelagens analíticas aproveitando os desafios e demandas do espaço geográfico e educacional da microrregião do Alto Turi, consolidando o tripé <strong class="text-brand-400">Ensino, Pesquisa e Extensão</strong>.
-                    </p>
-                </div>
-
-                <!-- Highlights Cards Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="glass-card rounded-2xl p-5 border-l-4 border-l-brand-500 hover:translate-y-[-2px] transition-transform">
-                        <div class="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center mb-3 text-lg">
-                            <i class="fa-solid fa-laptop-code"></i>
-                        </div>
-                        <h3 class="font-bold text-white text-base">Algoritmos & Softwares</h3>
-                        <p class="text-xs text-gray-300 mt-1 leading-relaxed">
-                            Desenvolvimento de ferramentas interativas, softwares educacionais e lógica computacional para a região.
-                        </p>
-                    </div>
-
-                    <div class="glass-card rounded-2xl p-5 border-l-4 border-l-emerald-400 hover:translate-y-[-2px] transition-transform">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center mb-3 text-lg">
-                            <i class="fa-solid fa-chart-line"></i>
-                        </div>
-                        <h3 class="font-bold text-white text-base">Simulação & Modelagem</h3>
-                        <p class="text-xs text-gray-300 mt-1 leading-relaxed">
-                            Modelagem analítica de processos e simulação matemática de fenômenos científicos e tecnológicos.
-                        </p>
-                    </div>
-
-                    <div class="glass-card rounded-2xl p-5 border-l-4 border-l-teal-400 hover:translate-y-[-2px] transition-transform">
-                        <div class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center mb-3 text-lg">
-                            <i class="fa-solid fa-microchip"></i>
-                        </div>
-                        <h3 class="font-bold text-white text-base">Tecnologias Emergentes</h3>
-                        <p class="text-xs text-gray-300 mt-1 leading-relaxed">
-                            Aplicação de Inteligência Artificial, Aprendizado de Máquina e Gamificação no ensino de Ciências Exatas.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 2: EQUIPE INTEGRANTES -->
-            <section id="content-equipe" class="tab-content hidden space-y-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-xl font-bold text-white">Corpo Docente Pesquisador</h2>
-                        <p class="text-xs text-gray-400">Integrantes e liderança acadêmica do MAAMUTE-TURI</p>
-                    </div>
-                    <span class="bg-brand-500/20 text-brand-300 text-xs px-3 py-1 rounded-full font-semibold border border-brand-500/30">
-                        4 Docentes
-                    </span>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Coordenador -->
-                    <div class="glass-card rounded-2xl p-6 relative overflow-hidden group border-brand-500/50 border hover:border-brand-400 transition-all">
-                        <div class="absolute -right-4 -top-4 w-20 h-20 bg-brand-500/10 rounded-full blur-xl"></div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-500 flex items-center justify-center text-white text-xl font-black shadow-lg flex-shrink-0">
-                                EC
-                            </div>
-                            <div class="space-y-1">
-                                <span class="inline-block bg-brand-500/20 text-brand-300 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded border border-brand-500/30 mb-1">
-                                    Coordenador / Proponente
-                                </span>
-                                <h3 class="font-bold text-white text-base leading-snug">Prof. Elzimar José de Carvalho Neto</h3>
-                                <p class="text-xs text-emerald-400 font-medium">Especialista</p>
-                                <p class="text-xs text-gray-400 pt-1">Docente do IFMA Campus Zé Doca • Diretoria de Ensino</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Integrante 2 -->
-                    <div class="glass-card rounded-2xl p-6 relative overflow-hidden group hover:border-white/30 transition-all">
-                        <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-brand-400 text-xl font-black shadow-lg flex-shrink-0 border border-white/10">
-                                JN
-                            </div>
-                            <div class="space-y-1">
-                                <span class="inline-block bg-white/10 text-gray-300 text-[10px] font-semibold uppercase px-2 py-0.5 rounded mb-1">
-                                    Pesquisador
-                                </span>
-                                <h3 class="font-bold text-white text-base leading-snug">Prof. Jose Nunes de Oliveira Neto</h3>
-                                <p class="text-xs text-emerald-400 font-medium">Mestre</p>
-                                <p class="text-xs text-gray-400 pt-1">Docente Pesquisador • IFMA Campus Zé Doca</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Integrante 3 -->
-                    <div class="glass-card rounded-2xl p-6 relative overflow-hidden group hover:border-white/30 transition-all">
-                        <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-brand-400 text-xl font-black shadow-lg flex-shrink-0 border border-white/10">
-                                PR
-                            </div>
-                            <div class="space-y-1">
-                                <span class="inline-block bg-white/10 text-gray-300 text-[10px] font-semibold uppercase px-2 py-0.5 rounded mb-1">
-                                    Pesquisador
-                                </span>
-                                <h3 class="font-bold text-white text-base leading-snug">Prof. Pedro Rodrigues da Silva Filho</h3>
-                                <p class="text-xs text-emerald-400 font-medium">Mestre</p>
-                                <p class="text-xs text-gray-400 pt-1">Docente Pesquisador • IFMA Campus Zé Doca</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Integrante 4 -->
-                    <div class="glass-card rounded-2xl p-6 relative overflow-hidden group hover:border-white/30 transition-all">
-                        <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-brand-400 text-xl font-black shadow-lg flex-shrink-0 border border-white/10">
-                                ES
-                            </div>
-                            <div class="space-y-1">
-                                <span class="inline-block bg-white/10 text-gray-300 text-[10px] font-semibold uppercase px-2 py-0.5 rounded mb-1">
-                                    Pesquisador
-                                </span>
-                                <h3 class="font-bold text-white text-base leading-snug">Prof. Elienai Stanley Barros de Sousa</h3>
-                                <p class="text-xs text-emerald-400 font-medium">Doutor</p>
-                                <p class="text-xs text-gray-400 pt-1">Docente Pesquisador • IFMA Campus Zé Doca</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 3: OBJETIVOS INSTITUCIONAIS -->
-            <section id="content-objetivos" class="tab-content hidden space-y-6">
-                <!-- Objetivo Geral -->
-                <div class="glass-card rounded-3xl p-6 md:p-8 border-l-4 border-l-brand-400 space-y-3">
-                    <span class="text-xs font-bold text-brand-400 uppercase tracking-widest flex items-center gap-2">
-                        <i class="fa-solid fa-star"></i> Objetivo Geral
-                    </span>
-                    <h2 class="text-lg md:text-xl font-bold text-white leading-snug">
-                        Institucionalizar no IFMA Campus Zé Doca o Grupo de Pesquisa e Estudos MAAMUTE TURI como núcleo de excelência voltado à Computação, Matemática, Algoritmos e Tecnologias Educacionais.
-                    </h2>
-                    <p class="text-xs md:text-sm text-gray-300 font-light">
-                        Articulando os cursos superiores e a Educação Profissional e Tecnológica (EPT) na microrregião do Alto Turi.
-                    </p>
-                </div>
-
-                <!-- Objetivos Específicos Lista -->
-                <div class="space-y-3">
-                    <h3 class="text-base font-bold text-white px-1">Objetivos Específicos</h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="glass-card rounded-2xl p-5 flex items-start gap-3">
-                            <span class="w-7 h-7 rounded-lg bg-brand-500/20 text-brand-300 font-bold text-xs flex items-center justify-center flex-shrink-0">1</span>
-                            <p class="text-xs md:text-sm text-gray-200 leading-relaxed">
-                                Desenvolver softwares, ambientes virtuais e ferramentas interativas voltadas para o ensino de Matemática, Computação e Ciências.
-                            </p>
-                        </div>
-
-                        <div class="glass-card rounded-2xl p-5 flex items-start gap-3">
-                            <span class="w-7 h-7 rounded-lg bg-brand-500/20 text-brand-300 font-bold text-xs flex items-center justify-center flex-shrink-0">2</span>
-                            <p class="text-xs md:text-sm text-gray-200 leading-relaxed">
-                                Fomentar projetos de Iniciação Científica (PIBIC/PIBITI), Trabalhos de Conclusão de Curso (TCC) e Iniciação à Docência (PIBID/Residência Pedagógica).
-                            </p>
-                        </div>
-
-                        <div class="glass-card rounded-2xl p-5 flex items-start gap-3">
-                            <span class="w-7 h-7 rounded-lg bg-brand-500/20 text-brand-300 font-bold text-xs flex items-center justify-center flex-shrink-0">3</span>
-                            <p class="text-xs md:text-sm text-gray-200 leading-relaxed">
-                                Capacitar os estudantes dos Cursos Técnicos Integrados no desenvolvimento de algoritmos, lógica de programação, análise de dados e mídias digitais.
-                            </p>
-                        </div>
-
-                        <div class="glass-card rounded-2xl p-5 flex items-start gap-3">
-                            <span class="w-7 h-7 rounded-lg bg-brand-500/20 text-brand-300 font-bold text-xs flex items-center justify-center flex-shrink-0">4</span>
-                            <p class="text-xs md:text-sm text-gray-200 leading-relaxed">
-                                Pesquisar e aplicar métodos de Inteligência Artificial, Gamificação e Aprendizado de Máquina na Educação.
-                            </p>
-                        </div>
-
-                        <div class="glass-card rounded-2xl p-5 flex items-start gap-3 md:col-span-2">
-                            <span class="w-7 h-7 rounded-lg bg-brand-500/20 text-brand-300 font-bold text-xs flex items-center justify-center flex-shrink-0">5</span>
-                            <p class="text-xs md:text-sm text-gray-200 leading-relaxed">
-                                Submeter propostas de captação de recursos junto a agências de fomento (<strong class="text-white">FAPEMA, CNPq, CAPES, FINEP</strong>) e editais da PRPGI/IFMA.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 4: MATRIZ DE ATUAÇÃO POR CURSO -->
-            <section id="content-cursos" class="tab-content hidden space-y-6">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                        <h2 class="text-xl font-bold text-white">Matriz de Atuação por Curso</h2>
-                        <p class="text-xs text-gray-400">Integração nas áreas do grupo e nível acadêmico</p>
-                    </div>
-
-                    <!-- Interactive Filter Buttons -->
-                    <div class="flex items-center bg-white/5 p-1 rounded-xl border border-white/10 text-xs">
-                        <button onclick="filterCourses('todos')" id="filter-todos" class="course-filter-btn bg-brand-600 text-white px-3 py-1.5 rounded-lg font-medium transition-all">Todos</button>
-                        <button onclick="filterCourses('Superior')" id="filter-Superior" class="course-filter-btn text-gray-300 hover:text-white px-3 py-1.5 rounded-lg font-medium transition-all">Superior</button>
-                        <button onclick="filterCourses('Médio')" id="filter-Médio" class="course-filter-btn text-gray-300 hover:text-white px-3 py-1.5 rounded-lg font-medium transition-all">Médio</button>
-                    </div>
-                </div>
-
-                <!-- Courses List Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="coursesGrid">
-                    
-                    <!-- Lic. Matemática -->
-                    <div class="course-card glass-card rounded-2xl p-5 space-y-2 border-t-2 border-t-brand-400" data-level="Superior">
-                        <div class="flex items-center justify-between">
-                            <span class="bg-brand-500/20 text-brand-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">Nível Superior</span>
-                            <i class="fa-solid fa-calculator text-brand-400"></i>
-                        </div>
-                        <h3 class="font-bold text-white text-base">Licenciatura em Matemática</h3>
-                        <p class="text-xs text-gray-300 font-light leading-relaxed">
-                            <strong class="text-brand-300">Foco:</strong> Softwares educativos, geometria dinâmica e aplicação de tecnologias no ensino.
-                        </p>
-                    </div>
-
-                    <!-- Lic. Química -->
-                    <div class="course-card glass-card rounded-2xl p-5 space-y-2 border-t-2 border-t-emerald-400" data-level="Superior">
-                        <div class="flex items-center justify-between">
-                            <span class="bg-brand-500/20 text-brand-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">Nível Superior</span>
-                            <i class="fa-solid fa-vial text-emerald-400"></i>
-                        </div>
-                        <h3 class="font-bold text-white text-base">Licenciatura em Química</h3>
-                        <p class="text-xs text-gray-300 font-light leading-relaxed">
-                            <strong class="text-brand-300">Foco:</strong> Simulações digitais, mídias interativas e objetos virtuais de aprendizagem.
-                        </p>
-                    </div>
-
-                    <!-- Téc. Informática -->
-                    <div class="course-card glass-card rounded-2xl p-5 space-y-2 border-t-2 border-t-teal-400" data-level="Médio">
-                        <div class="flex items-center justify-between">
-                            <span class="bg-teal-500/20 text-teal-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">Nível Médio</span>
-                            <i class="fa-solid fa-code text-teal-400"></i>
-                        </div>
-                        <h3 class="font-bold text-white text-base">Técnico em Informática</h3>
-                        <p class="text-xs text-gray-300 font-light leading-relaxed">
-                            <strong class="text-brand-300">Foco:</strong> Desenvolvimento de software, lógica de programação, algoritmos, banco de dados e web.
-                        </p>
-                    </div>
-
-                    <!-- Cursos Técnicos Demais -->
-                    <div class="course-card glass-card rounded-2xl p-5 space-y-2 border-t-2 border-t-cyan-400" data-level="Médio">
-                        <div class="flex items-center justify-between">
-                            <span class="bg-cyan-500/20 text-cyan-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">Nível Médio</span>
-                            <i class="fa-solid fa-gears text-cyan-400"></i>
-                        </div>
-                        <h3 class="font-bold text-white text-base">Cursos Técnicos (Demais)</h3>
-                        <p class="text-xs text-gray-300 font-light leading-relaxed">
-                            <strong class="text-brand-300">Foco:</strong> Pensamento computacional, ferramentas digitais transversais e simulações técnicas.
-                        </p>
-                    </div>
-
-                </div>
-            </section>
-
-            <!-- TAB 5: STACK TECNOLÓGICO, REGRAS & CRONOGRAMA -->
-            <section id="content-stack" class="tab-content hidden space-y-6">
-                <!-- Stack Tecnológico -->
-                <div class="glass-card rounded-3xl p-6 space-y-4">
-                    <div class="flex items-center gap-2 text-brand-400">
-                        <i class="fa-solid fa-layer-group text-lg"></i>
-                        <h2 class="text-lg font-bold text-white">Stack Tecnológico & Ecossistema Aberto</h2>
-                    </div>
-                    <p class="text-xs text-gray-300 font-light">
-                        Prioridade para linguagens de programação de código aberto, ferramentas de matemática e controle de versão no laboratório do campus.
-                    </p>
-
-                    <div class="flex flex-wrap gap-2 pt-2">
-                        <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
-                            <i class="fa-brands fa-python text-yellow-400"></i> Python
-                        </span>
-                        <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
-                            <i class="fa-brands fa-js text-yellow-300"></i> JavaScript
-                        </span>
-                        <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
-                            <i class="fa-solid fa-c"></i> C / C++
-                        </span>
-                        <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
-                            <i class="fa-solid fa-chart-pie"></i> R
-                        </span>
-                        <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
-                            <i class="fa-solid fa-square-root-variable"></i> Julia
-                        </span>
-                        <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
-                            <i class="fa-solid fa-shapes"></i> GeoGebra
-                        </span>
-                        <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
-                            <i class="fa-solid fa-terminal"></i> Octave
-                        </span>
-                        <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
-                            <i class="fa-brands fa-github"></i> Git / GitHub
-                        </span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Regimento Interno -->
-                    <div class="glass-card rounded-2xl p-6 space-y-3">
-                        <div class="flex items-center gap-2 text-brand-400">
-                            <i class="fa-solid fa-scale-balanced"></i>
-                            <h3 class="font-bold text-white text-base">Regimento Interno & Open Source</h3>
-                        </div>
-                        <ul class="text-xs text-gray-300 space-y-2 list-disc list-inside font-light leading-relaxed">
-                            <li>Vinculação estrita a projetos de ensino, pesquisa e extensão aprovados e registrados no IFMA.</li>
-                            <li>Todo software e código produzido no laboratório é <strong class="text-white">Open Source</strong> (Licença Livre / Creative Commons), atribuindo crédito ao IFMA Campus Zé Doca.</li>
-                            <li>Acompanhamento contínuo dos discentes do Ensino Médio Integrado por orientadores docentes ou monitores da graduação.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Cronograma em Linha do Tempo -->
-                    <div class="glass-card rounded-2xl p-6 space-y-3">
-                        <div class="flex items-center gap-2 text-brand-400">
-                            <i class="fa-solid fa-timeline"></i>
-                            <h3 class="font-bold text-white text-base">Cronograma de Implantação</h3>
-                        </div>
-                        <div class="space-y-3 relative pl-4 border-l border-brand-500/40 text-xs">
-                            <div class="relative">
-                                <span class="absolute -left-[21px] top-0.5 w-2.5 h-2.5 rounded-full bg-brand-400"></span>
-                                <span class="font-bold text-white">Mês 1:</span> Submissão e aprovação nas instâncias colegiadas.
-                            </div>
-                            <div class="relative">
-                                <span class="absolute -left-[21px] top-0.5 w-2.5 h-2.5 rounded-full bg-brand-400"></span>
-                                <span class="font-bold text-white">Mês 2-3:</span> Configuração do ambiente físico e infraestrutura de rede.
-                            </div>
-                            <div class="relative">
-                                <span class="absolute -left-[21px] top-0.5 w-2.5 h-2.5 rounded-full bg-brand-400"></span>
-                                <span class="font-bold text-white">Mês 4:</span> Instalação da stack de softwares e cadastro inicial dos projetos.
-                            </div>
-                            <div class="relative">
-                                <span class="absolute -left-[21px] top-0.5 w-2.5 h-2.5 rounded-full bg-brand-400"></span>
-                                <span class="font-bold text-white">Mês 5:</span> Publicação da Portaria Oficial e abertura de edital para bolsistas.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-        </main>
-
-        <!-- Footer -->
-        <footer class="glass-card rounded-2xl p-6 text-center text-xs text-gray-400 space-y-2">
-            <p class="font-medium text-gray-300">
-                Grupo de Pesquisa e Estudos MAAMUTE-TURI • IFMA Campus Zé Doca
-            </p>
-            <p class="text-[11px] text-gray-500">
-                Desenvolvimento de Pesquisas, Softwares e Tecnologias para a Microrregião do Alto Turi - Maranhão
-            </p>
-        </footer>
-
+<div id="colunaJogo">
+  <div id="hud">
+    <div>Pontos: <span id="score">0</span></div>
+    <div>Nível: <span id="nivelTxt">1</span></div>
+    <div id="vidas">❤️❤️❤️</div>
+  </div>
+  <div id="canvasWrap">
+    <canvas id="game"></canvas>
+    <div id="flashChoque"></div>
+    <div id="telaInicio">
+      <p>Toque na tela ou aperte ESPAÇO<br>para começar</p>
     </div>
-
-    <!-- Toast Notification Message -->
-    <div id="toast" class="fixed bottom-6 right-6 bg-brand-600 text-white text-xs px-4 py-3 rounded-xl shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2 z-50">
-        <i class="fa-solid fa-check-circle text-base"></i>
-        <span id="toastMsg">Informações copiadas!</span>
+    <div id="rankingOverlay">
+      <h3>🏆 Top 3</h3>
+      <div id="top3">Carregando...</div>
     </div>
+  </div>
+  <div id="dica">Cuidado com buracos — cair neles é fatal! Pule sobre obstáculos e o tigre-dente-de-sabre.</div>
+</div>
 
-    <script>
-        // Tab Switcher Logic
-        function switchTab(tabId) {
-            // Hide all contents
-            document.querySelectorAll('.tab-content').forEach(el => {
-                el.classList.add('hidden');
-                el.classList.remove('block');
-            });
+<div id="feedback"></div>
 
-            // Remove active class from all buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('tab-active');
-                btn.classList.add('text-gray-300', 'hover:bg-white/10');
-            });
+<div id="quiz">
+  <p id="pergunta"></p>
+  <div id="opcoes"></div>
+  <div id="timerBarra"><div id="timerPreenchimento"></div></div>
+  <div id="timerTexto">3.0s</div>
+</div>
 
-            // Show selected content
-            const activeContent = document.getElementById(`content-${tabId}`);
-            if (activeContent) {
-                activeContent.classList.remove('hidden');
-                activeContent.classList.add('block');
-            }
+<div id="rankingBox">
+  <p id="tituloRanking">Fim de jogo!</p>
+  <p>Pontuação: <span id="pontosFinal"></span></p>
+  <div id="erroFirebase"></div>
+  <input id="nomeJogador" placeholder="Digite seu nome" maxlength="15">
+  <br>
+  <button id="btnSalvar" onclick="salvarRanking()">Salvar no Ranking</button>
+  <div id="statusSalvar"></div>
+  <br>
+  <a href="#" id="linkRankingCompleto" onclick="abrirRankingCompleto(event)" style="color:#134611; text-decoration:underline; font-size:15px; display:inline-block; margin-top:10px;">Ver ranking completo</a>
+  <br>
+  <button onclick="location.reload()">Jogar de novo</button>
+</div>
 
-            // Highlight active button
-            const activeBtn = document.getElementById(`tab-${tabId}`);
-            if (activeBtn) {
-                activeBtn.classList.add('tab-active');
-                activeBtn.classList.remove('text-gray-300', 'hover:bg-white/10');
-            }
-        }
+<div id="rankingCompletoModal">
+  <div class="caixa">
+    <h2 style="color:#134611; margin-top:0; text-align:center;">🏆 Ranking Completo</h2>
+    <div id="listaRankingCompleta">Carregando...</div>
+    <div style="text-align:center; margin-top:16px;">
+      <button onclick="fecharRankingCompleto()" style="padding:10px 18px; font-size:16px; border:none; border-radius:8px; background:#134611; color:white; cursor:pointer;">Fechar</button>
+    </div>
+  </div>
+</div>
 
-        // Filter Courses Matrix Logic
-        function filterCourses(level) {
-            const cards = document.querySelectorAll('.course-card');
-            const btns = document.querySelectorAll('.course-filter-btn');
+<footer>
+  Desenvolvido por <strong><a href="https://www.maamute.com.br" target="_blank" rel="noopener">Grupo MAAMUTE</a></strong>. © Copyright 2026, All Rights Reserved.
+</footer>
 
-            btns.forEach(btn => {
-                btn.classList.remove('bg-brand-600', 'text-white');
-                btn.classList.add('text-gray-300', 'hover:text-white');
-            });
+<script>
+const FIREBASE_DB_URL = "https://glacial-compute-rum-maamute-default-rtdb.europe-west1.firebasedatabase.app";
+const RANKING_PATH = "ranking_maamute";
+const RANKING_URL = `${FIREBASE_DB_URL}/${RANKING_PATH}.json`;
 
-            const activeBtn = document.getElementById(`filter-${level}`);
-            if (activeBtn) {
-                activeBtn.classList.add('bg-brand-600', 'text-white');
-                activeBtn.classList.remove('text-gray-300');
-            }
+const erroFirebaseEl = document.getElementById("erroFirebase");
 
-            cards.forEach(card => {
-                if (level === 'todos' || card.getAttribute('data-level') === level) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
+function mostrarErroFirebase(msg) {
+  erroFirebaseEl.style.display = "block";
+  erroFirebaseEl.innerHTML =
+    "⚠️ <strong>Erro no ranking online:</strong> " + msg +
+    "<br><small>Verifique as regras do Realtime Database (.read/.write true) no nó ranking_maamute.</small>";
+}
 
-        // Copy Group Info to Clipboard
-        function copyGroupInfo() {
-            const groupInfoText = `MAAMUTE-TURI | Grupo de Pesquisa e Estudos em Modelagem Aplicada, Algoritmos, Matemática e Uso de Tecnologias Educacionais do Alto Turi\nIFMA - Campus Zé Doca\nCoordenador: Prof. Elzimar José de Carvalho Neto\nIntegrantes: Prof. Jose Nunes, Prof. Pedro Rodrigues, Prof. Elienai Stanley.`;
+async function salvarPontuacaoNoFirebase(registro) {
+  const resposta = await fetch(RANKING_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(registro)
+  });
+  if (!resposta.ok) {
+    const textoErro = await resposta.text();
+    throw new Error(`HTTP ${resposta.status}: ${textoErro}`);
+  }
+  return resposta.json();
+}
 
-            // Execute copy action
-            const tempTextArea = document.createElement("textarea");
-            tempTextArea.value = groupInfoText;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempTextArea);
+async function buscarRankingCompleto() {
+  const resposta = await fetch(RANKING_URL);
+  if (!resposta.ok) {
+    const textoErro = await resposta.text();
+    throw new Error(`HTTP ${resposta.status}: ${textoErro}`);
+  }
+  const dados = await resposta.json();
+  if (!dados) return [];
+  return Object.values(dados);
+}
 
-            showToast("Cartão de visitas do grupo copiado com sucesso!");
-        }
+async function testarConexaoFirebase() {
+  try { await buscarRankingCompleto(); }
+  catch (erro) { console.error("Erro ao testar conexão com Firebase:", erro); }
+}
+</script>
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMsg');
-            toastMsg.innerText = message;
+<script>
+function ehDispositivoMovel() {
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth <= 900;
+}
 
-            toast.classList.remove('opacity-0', 'pointer-events-none');
-            toast.classList.add('opacity-100');
+async function tentarTravarOrientacaoPaisagem() {
+  try {
+    if (screen.orientation && screen.orientation.lock) {
+      await screen.orientation.lock("landscape");
+    }
+  } catch (erro) {
+    console.warn("Não foi possível travar a orientação automaticamente:", erro.message);
+  }
+}
 
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'pointer-events-none');
-                toast.classList.remove('opacity-100');
-            }, 3000);
-        }
-    </script>
+function solicitarFullscreenEOrientacao() {
+  const elem = document.documentElement;
+  const pedirFullscreen = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.mozRequestFullScreen || elem.msRequestFullscreen;
+  if (pedirFullscreen) {
+    pedirFullscreen.call(elem).then(tentarTravarOrientacaoPaisagem).catch(()=>{
+      tentarTravarOrientacaoPaisagem();
+    });
+  } else {
+    tentarTravarOrientacaoPaisagem();
+  }
+}
+
+if (ehDispositivoMovel()) {
+  window.addEventListener("load", tentarTravarOrientacaoPaisagem);
+  document.addEventListener("pointerdown", solicitarFullscreenEOrientacao, { once: true });
+}
+</script>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+const scoreEl = document.getElementById("score");
+const vidasEl = document.getElementById("vidas");
+const quizEl = document.getElementById("quiz");
+const perguntaEl = document.getElementById("pergunta");
+const opcoesEl = document.getElementById("opcoes");
+const rankingBox = document.getElementById("rankingBox");
+const feedbackEl = document.getElementById("feedback");
+const flashChoque = document.getElementById("flashChoque");
+const statusSalvarEl = document.getElementById("statusSalvar");
+const btnSalvar = document.getElementById("btnSalvar");
+const telaInicioEl = document.getElementById("telaInicio");
+const bannerRecordeEl = document.getElementById("bannerRecorde");
+
+let chao = 0;
+let mamute = { x:60, y:0, w:90, h:90, vy:0, jumping:false, teveColisaoNoPulo:false, pernaFase:0 };
+let gravidade = 0.55;
+let forcaPulo = -14;
+let obstaculos = [];
+let coracoes = [];
+let velocidade = 4.5;
+const velocidadeMax = 8;
+let pontos = 0;
+let vidas = 3;
+const vidasMax = 3;
+let frame = 0;
+let pausado = false;
+let gameOver = false;
+let pulosBemSucedidos = 0;
+let jaSalvouNestaPartida = false;
+let jogoIniciado = false;
+
+const CHAVE_RECORDE = "recordeMaamute";
+let recordeAtual = parseInt(localStorage.getItem(CHAVE_RECORDE) || "0", 10);
+
+function atualizarRecordeComRanking() {
+  buscarRankingCompleto().then(lista => {
+    let maiorRemoto = 0;
+    lista.forEach(r => { if ((r.pontos||0) > maiorRemoto) maiorRemoto = r.pontos; });
+    if (maiorRemoto > recordeAtual) {
+      recordeAtual = maiorRemoto;
+      localStorage.setItem(CHAVE_RECORDE, String(recordeAtual));
+    }
+  }).catch(()=>{});
+}
+
+function dispararConfetes() {
+  const cores = ["#f0c419","#e74c3c","#8bc34a","#134611","#ffffff","#3498db"];
+  for (let i=0;i<60;i++) {
+    const c = document.createElement("div");
+    c.className = "confete";
+    c.style.left = Math.random()*100 + "vw";
+    c.style.background = cores[Math.floor(Math.random()*cores.length)];
+    c.style.animationDuration = (2.5 + Math.random()*2) + "s";
+    c.style.width = (6 + Math.random()*6) + "px";
+    c.style.height = (10 + Math.random()*10) + "px";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 5000);
+  }
+}
+
+function mostrarBannerRecorde() {
+  bannerRecordeEl.classList.add("mostrar");
+  dispararConfetes();
+  tocarSom("acerto");
+  setTimeout(() => { bannerRecordeEl.classList.remove("mostrar"); }, 3500);
+}
+
+let montanhas = [];
+let arvores = [];
+let frameProxArvore = 0;
+let animaisFundo = [];
+
+function inicializarCenario() {
+  montanhas = [];
+  for (let i=0;i<6;i++) montanhas.push({ x: i*320, altura: 90+Math.random()*70 });
+  arvores = [];
+  agendarProximaArvore();
+  animaisFundo = [
+    { tipo:"passaro", x:100, y:40, dir:1, vel:1.1 },
+    { tipo:"passaro", x:350, y:65, dir:1, vel:0.8 },
+    { tipo:"passaro", x:600, y:45, dir:-1, vel:0.9 },
+    { tipo:"raposa", x:800, y:0, vel:0 }
+  ];
+}
+
+function agendarProximaArvore() {
+  frameProxArvore = frame + 50 + Math.random() * 150;
+}
+
+function criarArvore() {
+  const juntas = Math.random() < 0.5;
+  const qtd = juntas ? (2 + Math.floor(Math.random()*2)) : 1;
+  const baseX = canvas.width + Math.random()*100;
+  for (let i=0; i<qtd; i++) {
+    arvores.push({
+      x: baseX + i*(22 + Math.random()*14),
+      escala: 0.5 + Math.random()*1.1
+    });
+  }
+}
+
+let audioCtx;
+function tocarSom(tipo) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    if (tipo === "choque") {
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.35);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+    } else if (tipo === "acerto") {
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.2);
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+    } else if (tipo === "erro") {
+      osc.type = "square";
+      osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.35);
+    } else if (tipo === "vida") {
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.25);
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+    } else if (tipo === "buraco") {
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.6);
+      gain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.65);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.65);
+    }
+  } catch(e) {}
+}
+
+let nuvemX = 0;
+function desenharNuvensTexto() {
+  ctx.save();
+  ctx.font = "bold 40px 'Trebuchet MS', sans-serif";
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.shadowColor = "rgba(180,210,230,0.9)";
+  ctx.shadowBlur = 12;
+  const texto = "MAAMUTE";
+  let x = (canvas.width*0.15 - nuvemX) % (canvas.width + 400) - 400;
+  ctx.fillText(texto, x, 55);
+  ctx.fillText(texto, x + canvas.width + 400, 55);
+  ctx.restore();
+}
+
+function ajustarAlturaCanvasWrap() {
+  const wrap = document.getElementById("canvasWrap");
+  const alturaJanela = window.innerHeight;
+  const larguraJanela = window.innerWidth;
+  const emPaisagemMobile = larguraJanela > alturaJanela && alturaJanela <= 500;
+
+  if (emPaisagemMobile) {
+    const espacoReservado = alturaJanela <= 420 ? 40 : 70;
+    wrap.style.height = Math.max(180, alturaJanela - espacoReservado) + "px";
+  } else {
+    const alturaDesejada = Math.min(alturaJanela * 0.62, 600);
+    wrap.style.height = Math.max(320, alturaDesejada) + "px";
+  }
+}
+
+function resize() {
+  ajustarAlturaCanvasWrap();
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+  chao = canvas.height - 60;
+  mamute.y = chao - mamute.h;
+}
+
+let ultimaLargura = window.innerWidth;
+window.addEventListener("resize", () => {
+  if (window.innerWidth !== ultimaLargura) {
+    ultimaLargura = window.innerWidth;
+    resize();
+  }
+});
+window.addEventListener("orientationchange", resize);
+
+window.addEventListener("load", () => {
+  resize();
+  inicializarCenario();
+  testarConexaoFirebase();
+  atualizarRecordeComRanking();
+  exibirTop3();
+  loop();
+});
+
+function desenharMontanhas() {
+  ctx.fillStyle = "#cfe6f2";
+  montanhas.forEach(m => {
+    let bx = ((m.x - frame*0.3) % (canvas.width + 320)) - 160;
+    ctx.beginPath();
+    ctx.moveTo(bx, chao);
+    ctx.lineTo(bx+80, chao-m.altura);
+    ctx.lineTo(bx+160, chao);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.moveTo(bx+55, chao-m.altura*0.75);
+    ctx.lineTo(bx+80, chao-m.altura);
+    ctx.lineTo(bx+105, chao-m.altura*0.75);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = "#cfe6f2";
+  });
+}
+
+function desenharArvoreTundra(x, y, escala) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(escala, escala);
+  ctx.fillStyle = "#8a8a8a";
+  ctx.fillRect(-3, -14, 6, 14);
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  ctx.ellipse(0, -26, 15, 13, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(-9, -19, 9, 8, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(9, -19, 9, 8, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = "rgba(200,225,240,0.6)";
+  ctx.beginPath();
+  ctx.ellipse(3, -22, 8, 6, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function desenharArvores() {
+  arvores.forEach(a => {
+    desenharArvoreTundra(a.x, chao, a.escala);
+  });
+}
+
+function atualizarArvores() {
+  const velArvores = 0.3 * (velocidade / 5);
+  arvores.forEach(a => a.x -= velArvores * 6);
+  arvores = arvores.filter(a => a.x + 60 > 0);
+  if (frame >= frameProxArvore) {
+    criarArvore();
+    agendarProximaArvore();
+  }
+}
+
+function desenharPassaro(x, y) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.strokeStyle = "#555";
+  ctx.lineWidth = 2;
+  const bate = Math.sin(frame*0.25) * 5;
+  ctx.beginPath();
+  ctx.moveTo(-7, 0);
+  ctx.quadraticCurveTo(-3, -5-bate, 0, 0);
+  ctx.quadraticCurveTo(3, -5-bate, 7, 0);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function desenharRaposa(x, y) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.fillStyle = "#e8912b";
+  ctx.beginPath();
+  ctx.ellipse(0, 0, 14, 8, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(12, -4, 6, 6, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = "white";
+  ctx.beginPath();
+  ctx.ellipse(-10, 2, 6, 4, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function desenharAnimaisFundo() {
+  animaisFundo.forEach(a => {
+    if (a.tipo === "passaro") {
+      a.x += a.vel * a.dir;
+      if (a.x > canvas.width+20 || a.x < -20) a.dir *= -1;
+      desenharPassaro(a.x, a.y);
+    } else if (a.tipo === "raposa") {
+      let rx = ((a.x - frame*(velocidade*0.6)) % (canvas.width + 300)) - 150;
+      desenharRaposa(rx, chao-8);
+    }
+  });
+}
+
+function desenharFundo() {
+  desenharMontanhas();
+  atualizarArvores();
+  desenharArvores();
+  nuvemX += 0.4;
+  desenharNuvensTexto();
+  desenharAnimaisFundo();
+  ctx.fillStyle = "#eef8fb";
+  ctx.fillRect(0, chao, canvas.width, canvas.height-chao);
+  ctx.strokeStyle = "#b9dcea";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(0, chao);
+  ctx.lineTo(canvas.width, chao);
+  ctx.stroke();
+}
+
+function desenharMamute() {
+  ctx.save();
+  ctx.translate(mamute.x, mamute.y);
+  const w = mamute.w, h = mamute.h;
+
+  if (!mamute.jumping) mamute.pernaFase += 0.25;
+  const balanco1 = Math.sin(mamute.pernaFase) * 8;
+  const balanco2 = Math.sin(mamute.pernaFase + Math.PI) * 8;
+
+  ctx.fillStyle = "#1f8a52";
+  ctx.beginPath();
+  ctx.ellipse(w*0.45, h*0.58, w*0.42, h*0.36, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle = "#166b3e";
+  for (let i=0;i<4;i++) {
+    ctx.beginPath();
+    ctx.moveTo(w*0.15 + i*10, h*0.32);
+    ctx.lineTo(w*0.18 + i*10, h*0.15);
+    ctx.lineTo(w*0.22 + i*10, h*0.32);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  ctx.fillStyle = "#1f8a52";
+  ctx.beginPath();
+  ctx.ellipse(w*0.82, h*0.4, w*0.3, h*0.3, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle = "#166b3e";
+  ctx.beginPath();
+  ctx.moveTo(w*0.62, h*0.2);
+  ctx.quadraticCurveTo(w*0.82, h*0.02, w*1.02, h*0.2);
+  ctx.quadraticCurveTo(w*0.82, h*0.12, w*0.62, h*0.2);
+  ctx.fill();
+
+  ctx.fillStyle = "white";
+  drawStar(w*0.78, h*0.32, 5, 6, 3);
+
+  ctx.strokeStyle = "#1f8a52";
+  ctx.lineWidth = 14;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(w*1.05, h*0.42);
+  ctx.quadraticCurveTo(w*1.15, h*0.65, w*0.98, h*0.78);
+  ctx.stroke();
+
+  ctx.strokeStyle = "#f5f0e6";
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(w*1.0, h*0.5);
+  ctx.quadraticCurveTo(w*1.3, h*0.55, w*1.15, h*0.85);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(w*0.95, h*0.55);
+  ctx.quadraticCurveTo(w*0.7, h*0.75, w*0.9, h*0.95);
+  ctx.stroke();
+
+  ctx.fillStyle = "white";
+  ctx.beginPath();
+  ctx.arc(w*0.86, h*0.35, 6, 0, Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = "black";
+  ctx.beginPath();
+  ctx.arc(w*0.87, h*0.35, 3, 0, Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle = "#166b3e";
+  ctx.beginPath();
+  ctx.ellipse(w*0.62, h*0.4, w*0.09, h*0.13, 0.4, 0, Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle = "#166b3e";
+  ctx.save();
+  ctx.translate(w*0.18+7, h*0.85);
+  ctx.rotate(balanco1*0.03);
+  ctx.fillRect(-7, 0, 14, 16);
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(w*0.5+7, h*0.85);
+  ctx.rotate(balanco2*0.03);
+  ctx.fillRect(-7, 0, 14, 16);
+  ctx.restore();
+
+  ctx.fillStyle = "#f5f0e6";
+  ctx.fillRect(w*0.18 + balanco1*0.3, h*0.98, 14, 4);
+  ctx.fillRect(w*0.5 + balanco2*0.3, h*0.98, 14, 4);
+
+  ctx.restore();
+}
+
+function drawStar(cx, cy, spikes, outer, inner) {
+  let rot = Math.PI/2*3;
+  let x = cx, y = cy;
+  const step = Math.PI/spikes;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy-outer);
+  for (let i=0;i<spikes;i++) {
+    x = cx + Math.cos(rot)*outer; y = cy + Math.sin(rot)*outer;
+    ctx.lineTo(x,y); rot += step;
+    x = cx + Math.cos(rot)*inner; y = cy + Math.sin(rot)*inner;
+    ctx.lineTo(x,y); rot += step;
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+// ---------- Desenho dos obstáculos (inclui buraco fatal e tigre-dente-de-sabre) ----------
+function desenharObstaculo(o) {
+  ctx.save();
+  ctx.translate(o.x, o.y);
+
+  if (o.tipo === "iceberg") {
+    ctx.fillStyle = "#a8d8ef"; ctx.strokeStyle = "#7fb8d6"; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, o.h); ctx.lineTo(o.w*0.3, 0); ctx.lineTo(o.w*0.6, o.h*0.5); ctx.lineTo(o.w, o.h);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+
+  } else if (o.tipo === "espinho") {
+    ctx.fillStyle = "#e3f2fa"; ctx.strokeStyle = "#8fc7de";
+    for (let i=0;i<3;i++) {
+      ctx.beginPath();
+      ctx.moveTo(i*(o.w/3), o.h); ctx.lineTo(i*(o.w/3)+o.w/6, 0); ctx.lineTo(i*(o.w/3)+o.w/3, o.h);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+    }
+
+  } else if (o.tipo === "pedra") {
+    ctx.fillStyle = "#90a4ae";
+    ctx.beginPath(); ctx.ellipse(o.w/2, o.h/2, o.w/2, o.h/2, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = "white";
+    ctx.beginPath(); ctx.ellipse(o.w/2, o.h/3, o.w/2.3, o.h/4, 0, 0, Math.PI*2); ctx.fill();
+
+  } else if (o.tipo === "buraco") {
+    const grad = ctx.createRadialGradient(o.w/2, 6, 4, o.w/2, 6, o.w/2);
+    grad.addColorStop(0, "#050505");
+    grad.addColorStop(0.6, "#1c1c1c");
+    grad.addColorStop(1, "#3a3a3a");
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.ellipse(o.w/2, 8, o.w/2, 12, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = "#c9e6f2";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(o.w/2, 8, o.w/2, 12, 0, 0, Math.PI*2);
+    ctx.stroke();
+
+  } else if (o.tipo === "tigre") {
+    const w = o.w, h = o.h;
+    // corpo (lado direito)
+    ctx.fillStyle = "#e2a640";
+    ctx.beginPath();
+    ctx.ellipse(w*0.58, h*0.62, w*0.42, h*0.32, 0, 0, Math.PI*2);
+    ctx.fill();
+    // cabeça (lado esquerdo — virada para a esquerda)
+    ctx.beginPath();
+    ctx.ellipse(w*0.2, h*0.4, w*0.26, h*0.26, 0, 0, Math.PI*2);
+    ctx.fill();
+    // orelhas
+    ctx.beginPath();
+    ctx.arc(w*0.3, h*0.2, 5, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath();
+    ctx.arc(w*0.1, h*0.2, 5, 0, Math.PI*2); ctx.fill();
+    // barriga clara
+    ctx.fillStyle = "#fdf3df";
+    ctx.beginPath();
+    ctx.ellipse(w*0.58, h*0.78, w*0.3, h*0.14, 0, 0, Math.PI*2);
+    ctx.fill();
+    // listras
+    ctx.strokeStyle = "#5b3a1a";
+    ctx.lineWidth = 3;
+    for (let i=0;i<4;i++) {
+      ctx.beginPath();
+      ctx.moveTo(w*0.9-i*w*0.14, h*0.35);
+      ctx.lineTo(w*0.85-i*w*0.14, h*0.75);
+      ctx.stroke();
+    }
+    // presas (dente-de-sabre)
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.moveTo(w*0.28, h*0.48);
+    ctx.lineTo(w*0.25, h*0.82);
+    ctx.lineTo(w*0.21, h*0.48);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(w*0.18, h*0.48);
+    ctx.lineTo(w*0.15, h*0.82);
+    ctx.lineTo(w*0.11, h*0.48);
+    ctx.closePath();
+    ctx.fill();
+    // olho
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.arc(w*0.14, h*0.34, 3, 0, Math.PI*2);
+    ctx.fill();
+    // pernas
+    ctx.fillStyle = "#c98a30";
+    ctx.fillRect(w*0.8, h*0.85, 8, h*0.15);
+    ctx.fillRect(w*0.45, h*0.85, 8, h*0.15);
+  }
+
+  ctx.restore();
+}
+
+function desenharCoracao(c) {
+  ctx.save();
+  ctx.translate(c.x, c.y);
+  ctx.font = "34px serif";
+  ctx.fillText("❤️", 0, 30);
+  ctx.restore();
+}
+
+function iniciarJogo() {
+  if (jogoIniciado) return;
+  jogoIniciado = true;
+  telaInicioEl.style.display = "none";
+}
+
+function pular() {
+  if (!jogoIniciado) { iniciarJogo(); return; }
+  if (!mamute.jumping && !pausado) {
+    mamute.vy = forcaPulo;
+    mamute.jumping = true;
+    mamute.teveColisaoNoPulo = false;
+  }
+}
+
+document.addEventListener("keydown", e => { if (e.code === "Space") { e.preventDefault(); pular(); } });
+
+function aoApertar(e) {
+  if (e.cancelable) e.preventDefault();
+  pular();
+}
+
+[canvas, telaInicioEl, document.getElementById("colunaJogo")].forEach(el => {
+  el.addEventListener("pointerdown", aoApertar, { passive: false });
+});
+
+if (!window.PointerEvent) {
+  let ultimoToqueEm = 0;
+  function aoTocarFallback(e) {
+    if (e.cancelable) e.preventDefault();
+    ultimoToqueEm = Date.now();
+    pular();
+  }
+  function aoClicarFallback() {
+    if (Date.now() - ultimoToqueEm < 500) return;
+    pular();
+  }
+  [canvas, telaInicioEl].forEach(el => {
+    el.addEventListener("touchstart", aoTocarFallback, { passive: false });
+    el.addEventListener("click", aoClicarFallback);
+  });
+}
+
+function nivelDificuldade() {
+  if (pontos < 200) return 0;
+  if (pontos < 450) return 1;
+  if (pontos < 750) return 2;
+  if (pontos < 1100) return 3;
+  return 4;
+}
+
+let framesParaProximoObstaculo = 130;
+
+function tipoAleatorio(nivel) {
+  const pool = ["iceberg","espinho","pedra","iceberg","espinho","pedra"];
+  if (nivel >= 1) pool.push("tigre");
+  if (nivel >= 1) pool.push("buraco");
+  if (nivel >= 3) pool.push("tigre", "buraco");
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+function novaAlturaObstaculo(nivel) {
+  const alturaBase = 25 + Math.random()*18;
+  const alturaExtra = nivel * (3 + Math.random()*3);
+  return Math.min(60, alturaBase + alturaExtra);
+}
+
+function criarUmObstaculo(x, nivel) {
+  const tipo = tipoAleatorio(nivel);
+
+  if (tipo === "buraco") {
+    const largura = 70 + Math.random()*50 + nivel*4;
+    obstaculos.push({ x, y: chao, w: largura, h: 24, tipo });
+    return largura;
+  }
+
+  if (tipo === "tigre") {
+    const altura = 62 + Math.random()*14 + nivel*2;
+    const largura = 62;
+    obstaculos.push({ x, y: chao-altura, w: largura, h: altura, tipo });
+    return largura;
+  }
+
+  const largura = 40 + nivel * 2;
+  const altura = novaAlturaObstaculo(nivel);
+  obstaculos.push({ x, y: chao-altura, w: largura, h: altura, tipo });
+  return largura;
+}
+
+function criarObstaculo() {
+  const nivel = nivelDificuldade();
+
+  const padroes = ["unico", "unico", "unico", "unico", "unico"];
+  if (nivel >= 2) padroes.push("duplo");
+  if (nivel >= 4) padroes.push("duplo");
+  const padrao = padroes[Math.floor(Math.random()*padroes.length)];
+
+  let inicioX = canvas.width;
+  let fimX = canvas.width;
+
+  if (padrao === "unico") {
+    const largura = criarUmObstaculo(inicioX, nivel);
+    fimX = inicioX + largura;
+
+  } else {
+    const largura1 = criarUmObstaculo(inicioX, nivel);
+    const espacoInterno = 170 + Math.random()*60;
+    const x2 = inicioX + largura1 + espacoInterno;
+    const largura2 = criarUmObstaculo(x2, nivel);
+    fimX = x2 + largura2;
+  }
+
+  return fimX - inicioX;
+}
+
+function agendarProximoObstaculo(larguraGrupo) {
+  const sorte = Math.random();
+  let distanciaSeguranca;
+
+  if (sorte < 0.18) {
+    distanciaSeguranca = 550 + Math.random() * 320;
+  } else if (sorte < 0.55) {
+    distanciaSeguranca = 260 + Math.random() * 140;
+  } else if (sorte < 0.85) {
+    distanciaSeguranca = 150 + Math.random() * 90;
+  } else {
+    distanciaSeguranca = 110 + Math.random() * 60;
+  }
+
+  framesParaProximoObstaculo = Math.max(
+    55,
+    Math.round((larguraGrupo + distanciaSeguranca) / velocidade)
+  );
+}
+
+function criarCoracao() {
+  if (vidas >= vidasMax) return;
+  coracoes.push({ x: canvas.width, y: chao - 90 - Math.random()*40, w:34, h:34 });
+}
+
+function bancoPerguntas() {
+  return [
+    { p:"Quanto é 5 + 7?", op:[12,10,14], r:12 },
+    { p:"Quanto é 9 x 2?", op:[16,18,20], r:18 },
+    { p:"Qual o dobro de 6?", op:[10,12,14], r:12 },
+    { p:"Quanto é 20 ÷ 4?", op:[4,5,6], r:5 },
+    { p:"Quanto é 3 x 3?", op:[6,9,12], r:9 },
+    { p:"Quanto é 15 - 8?", op:[6,7,8], r:7 },
+    { p:"Quanto é 8 + 8?", op:[14,16,18], r:16 },
+    { p:"Quanto é 12 x 3?", op:[32,36,40], r:36 },
+    { p:"Quanto é 45 ÷ 9?", op:[4,5,6], r:5 },
+    { p:"Quanto é 100 - 37?", op:[63,67,73], r:63 },
+    { p:"Quanto é 7 x 8?", op:[54,56,64], r:56 },
+    { p:"Quanto é 6 x 7?", op:[36,42,48], r:42 },
+    { p:"Quanto é 11 x 11?", op:[110,121,132], r:121 },
+    { p:"Quanto é 50 ÷ 5?", op:[8,10,12], r:10 },
+    { p:"Quanto é 13 + 19?", op:[30,32,34], r:32 },
+    { p:"Qual o triplo de 9?", op:[24,27,30], r:27 },
+    { p:"Quanto é 144 ÷ 12?", op:[10,12,14], r:12 },
+    { p:"Quanto é 9 x 9?", op:[72,81,90], r:81 },
+    { p:"Qual a raiz quadrada de 16?", op:[4,5,6], r:4 },
+    { p:"Qual a raiz quadrada de 25?", op:[4,5,6], r:5 },
+    { p:"Qual a raiz cúbica de 8?", op:[2,3,4], r:2 },
+    { p:"Qual a raiz quadrada de 49?", op:[6,7,8], r:7 },
+    { p:"Qual a raiz cúbica de 27?", op:[2,3,4], r:3 },
+    { p:"Qual a raiz quadrada de 81?", op:[8,9,10], r:9 },
+    { p:"Qual a raiz quadrada de 100?", op:[9,10,11], r:10 },
+    { p:"Quanto é 2 elevado a 4?", op:[8,16,32], r:16 },
+    { p:"Quanto é 3 elevado a 3?", op:[9,27,81], r:27 },
+    { p:"Quanto é 5 elevado a 2?", op:[10,25,50], r:25 },
+    { p:"Qual a raiz quadrada de 121?", op:[10,11,12], r:11 },
+    { p:"Qual a raiz cúbica de 64?", op:[4,6,8], r:4 },
+    { p:"A soma dos ângulos internos de um triângulo é?", op:["90°","180°","360°"], r:"180°" },
+    { p:"Um ângulo reto mede quantos graus?", op:["45°","90°","180°"], r:"90°" },
+    { p:"A soma dos ângulos internos de um quadrado é?", op:["180°","270°","360°"], r:"360°" },
+    { p:"Dois ângulos que somam 90° são chamados de?", op:["Complementares","Suplementares","Opostos"], r:"Complementares" },
+    { p:"Dois ângulos que somam 180° são chamados de?", op:["Complementares","Suplementares","Retos"], r:"Suplementares" },
+    { p:"Um ângulo maior que 90° e menor que 180° é chamado de?", op:["Agudo","Obtuso","Reto"], r:"Obtuso" },
+    { p:"Um ângulo menor que 90° é chamado de?", op:["Agudo","Obtuso","Raso"], r:"Agudo" },
+    { p:"A soma dos ângulos internos de um pentágono é?", op:["360°","540°","720°"], r:"540°" },
+    { p:"Um ângulo de 180° é chamado de?", op:["Reto","Raso","Agudo"], r:"Raso" },
+    { p:"Quantos lados tem um hexágono?", op:[5,6,7], r:6 },
+    { p:"Quantos lados tem um pentágono?", op:[4,5,6], r:5 },
+    { p:"Qual a área de um quadrado de lado 5?", op:[10,20,25], r:25 },
+    { p:"Qual o perímetro de um quadrado de lado 4?", op:[8,16,20], r:16 },
+    { p:"Qual a área de um retângulo 3x6?", op:[9,18,24], r:18 },
+    { p:"Quantos lados tem um octógono?", op:[6,8,10], r:8 },
+    { p:"Um triângulo com 3 lados iguais é chamado de?", op:["Equilátero","Isósceles","Escaleno"], r:"Equilátero" },
+    { p:"Um triângulo com 2 lados iguais é chamado de?", op:["Equilátero","Isósceles","Escaleno"], r:"Isósceles" },
+    { p:"Quanto é 50% de 200?", op:[50,100,150], r:100 },
+    { p:"Quanto é 1/4 de 40?", op:[8,10,12], r:10 },
+    { p:"Quanto é 25% de 80?", op:[15,20,25], r:20 },
+    { p:"Quanto é 1/2 de 90?", op:[40,45,50], r:45 },
+    { p:"Quanto é 10% de 300?", op:[20,30,40], r:30 },
+    { p:"Quanto é 3/4 de 20?", op:[10,15,20], r:15 },
+    { p:"Qual o próximo número: 2, 4, 6, 8, ...?", op:[9,10,12], r:10 },
+    { p:"Qual o próximo número: 1, 2, 4, 8, ...?", op:[10,12,16], r:16 },
+    { p:"Qual o próximo número: 5, 10, 15, ...?", op:[18,20,25], r:20 },
+    { p:"Qual o número que falta: 3, 6, 9, __, 15?", op:[10,11,12], r:12 },
+    { p:"Qual é o número par mais próximo de 17?", op:[16,17,18], r:16 },
+  ];
+}
+
+let timerQuiz = null;
+let tempoRestanteQuiz = 3;
+const tempoTotalQuiz = 3;
+
+function mostrarQuiz() {
+  pausado = true;
+  const lista = bancoPerguntas();
+  const q = lista[Math.floor(Math.random()*lista.length)];
+  perguntaEl.textContent = q.p;
+  opcoesEl.innerHTML = "";
+
+  let respondido = false;
+
+  const timerPreenchimento = document.getElementById("timerPreenchimento");
+  const timerTexto = document.getElementById("timerTexto");
+  tempoRestanteQuiz = tempoTotalQuiz;
+  timerPreenchimento.style.width = "100%";
+  timerPreenchimento.classList.remove("urgente");
+  timerTexto.textContent = tempoTotalQuiz.toFixed(1) + "s";
+
+  function encerrarQuiz(resultado) {
+    if (respondido) return;
+    respondido = true;
+    clearInterval(timerQuiz);
+    quizEl.style.display = "none";
+
+    if (resultado === true) {
+      velocidade = Math.min(velocidadeMax, velocidade + 0.2);
+      pontos += 15;
+      mostrarFeedback(true);
+      tocarSom("acerto");
+    } else {
+      velocidade = Math.max(4, velocidade - 0.4);
+      mostrarFeedback(false, resultado === "tempo");
+      tocarSom("erro");
+      vidas--;
+      atualizarVidas();
+      if (vidas <= 0) { finalizarJogo(); return; }
+    }
+    pausado = false;
+  }
+
+  const opcoesEmb = [...q.op].sort(()=>Math.random()-0.5);
+  opcoesEmb.forEach(op => {
+    const btn = document.createElement("button");
+    btn.textContent = op;
+    btn.onclick = () => encerrarQuiz(op === q.r);
+    opcoesEl.appendChild(btn);
+  });
+
+  quizEl.style.display = "block";
+
+  timerQuiz = setInterval(() => {
+    tempoRestanteQuiz -= 0.1;
+    if (tempoRestanteQuiz <= 0) {
+      tempoRestanteQuiz = 0;
+      timerPreenchimento.style.width = "0%";
+      timerTexto.textContent = "0.0s";
+      encerrarQuiz("tempo");
+      return;
+    }
+    const pct = (tempoRestanteQuiz / tempoTotalQuiz) * 100;
+    timerPreenchimento.style.width = pct + "%";
+    timerTexto.textContent = tempoRestanteQuiz.toFixed(1) + "s";
+    if (tempoRestanteQuiz <= 1) timerPreenchimento.classList.add("urgente");
+  }, 100);
+}
+
+function mostrarFeedback(acertou, foiTempo) {
+  if (acertou) {
+    feedbackEl.textContent = "✅ Acertou! +15 pontos";
+    feedbackEl.className = "certo";
+  } else if (foiTempo) {
+    feedbackEl.textContent = "⏰ Tempo esgotado! -1 vida";
+    feedbackEl.className = "errado";
+  } else {
+    feedbackEl.textContent = "❌ Errou! -1 vida";
+    feedbackEl.className = "errado";
+  }
+  feedbackEl.style.display = "block";
+  setTimeout(() => { feedbackEl.style.display = "none"; }, 1200);
+}
+
+function atualizarVidas() { vidasEl.textContent = "❤️".repeat(Math.max(0,vidas)); }
+
+function colide(a, b) {
+  const ax = a.x + a.w*0.35, aw = a.w*0.3, ah = a.h*0.35;
+  const ay = a.y + a.h*0.55;
+  const bx = b.x + b.w*0.25, bw = b.w*0.5, bh = b.h*0.6;
+  const by = b.y + b.h*0.3;
+  return ax < bx+bw && ax+aw > bx && ay < by+bh && ay+ah > by;
+}
+
+function colideCoracao(a, c) {
+  const ax = a.x + a.w*0.35, aw = a.w*0.3, ah = a.h*0.35;
+  const ay = a.y + a.h*0.55;
+  return ax < c.x+c.w && ax+aw > c.x && ay < c.y+c.h && ay+ah > c.y;
+}
+
+function colideBuraco(a, buraco) {
+  const margemSolo = 12;
+  const pesEsquerda = a.x + a.w*0.35;
+  const pesDireita = pesEsquerda + a.w*0.3;
+  const noSolo = a.y >= (chao - a.h - margemSolo);
+  return noSolo && pesDireita > buraco.x && pesEsquerda < buraco.x + buraco.w;
+}
+
+function efeitoChoque() {
+  tocarSom("choque");
+  canvas.classList.add("shake");
+  flashChoque.classList.add("ativo");
+  if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
+  setTimeout(() => {
+    canvas.classList.remove("shake");
+    flashChoque.classList.remove("ativo");
+  }, 1000);
+}
+
+async function exibirTop3() {
+  const top3El = document.getElementById("top3");
+  try {
+    const lista = await buscarRankingCompleto();
+    lista.sort((a,b) => (b.pontos||0) - (a.pontos||0));
+    const top3 = lista.slice(0,3);
+    const medalhas = ["🥇","🥈","🥉"];
+    top3El.innerHTML = top3.length
+      ? top3.map((r,i) => `<div class="item"><span>${medalhas[i]} ${r.nome}</span><span>${r.pontos}</span></div>`).join("")
+      : "<div class='item'>Sem registros ainda</div>";
+  } catch (erro) {
+    console.error("Erro ao buscar Top 3:", erro);
+    top3El.innerHTML = "<div class='item'>Erro ao carregar</div>";
+  }
+}
+
+async function abrirRankingCompleto(evento) {
+  evento.preventDefault();
+  const modal = document.getElementById("rankingCompletoModal");
+  const div = document.getElementById("listaRankingCompleta");
+  modal.classList.add("aberto");
+  div.innerHTML = "Carregando...";
+  try {
+    const lista = await buscarRankingCompleto();
+    lista.sort((a,b) => (b.pontos||0) - (a.pontos||0));
+    div.innerHTML = lista.length
+      ? lista.map((r,i) =>
+          `<div class="linha"><span>${i+1}. ${r.nome} — <strong>${r.pontos} pts</strong></span><span>${r.data||""}</span></div>`
+        ).join("")
+      : "<div class='linha'>Nenhum registro ainda. Seja o primeiro!</div>";
+  } catch (erro) {
+    console.error("Erro ao buscar ranking completo:", erro);
+    div.innerHTML = "<div class='linha'>Erro ao carregar ranking.</div>";
+  }
+}
+
+function fecharRankingCompleto() {
+  document.getElementById("rankingCompletoModal").classList.remove("aberto");
+}
+
+async function salvarRanking() {
+  if (jaSalvouNestaPartida) {
+    statusSalvarEl.textContent = "✅ Você já salvou esta pontuação.";
+    statusSalvarEl.style.color = "#134611";
+    return;
+  }
+
+  const nomeInput = document.getElementById("nomeJogador");
+  const nome = nomeInput.value.trim() || "Anônimo";
+
+  btnSalvar.disabled = true;
+  statusSalvarEl.textContent = "Salvando...";
+  statusSalvarEl.style.color = "#134611";
+  erroFirebaseEl.style.display = "none";
+
+  const agora = new Date();
+  const registro = {
+    nome,
+    pontos: Math.floor(pontos),
+    data: agora.toLocaleDateString('pt-BR') + " às " + agora.toLocaleTimeString('pt-BR'),
+    timestamp: agora.getTime()
+  };
+
+  try {
+    await salvarPontuacaoNoFirebase(registro);
+    jaSalvouNestaPartida = true;
+    statusSalvarEl.textContent = "✅ Pontuação salva com sucesso!";
+    statusSalvarEl.style.color = "#1b5e20";
+    nomeInput.disabled = true;
+    await exibirTop3();
+  } catch (erro) {
+    console.error("Erro ao salvar ranking:", erro);
+    statusSalvarEl.textContent = "❌ Falha ao salvar (veja detalhes abaixo).";
+    statusSalvarEl.style.color = "#b71c1c";
+    mostrarErroFirebase(erro.message);
+    btnSalvar.disabled = false;
+  }
+}
+
+function finalizarJogo() {
+  gameOver = true;
+  jaSalvouNestaPartida = false;
+  const pontosFinal = Math.floor(pontos);
+  document.getElementById("pontosFinal").textContent = pontosFinal;
+  document.getElementById("nomeJogador").disabled = false;
+  document.getElementById("nomeJogador").value = "";
+  btnSalvar.disabled = false;
+  statusSalvarEl.textContent = "";
+  erroFirebaseEl.style.display = "none";
+
+  const bateuRecorde = pontosFinal > recordeAtual;
+  if (bateuRecorde) {
+    recordeAtual = pontosFinal;
+    localStorage.setItem(CHAVE_RECORDE, String(recordeAtual));
+    mostrarBannerRecorde();
+    setTimeout(() => { rankingBox.style.display = "block"; }, 1300);
+  } else {
+    rankingBox.style.display = "block";
+  }
+}
+
+function loop() {
+  if (gameOver) return;
+  requestAnimationFrame(loop);
+  if (pausado) return;
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  if (!jogoIniciado) {
+    desenharFundo();
+    desenharMamute();
+    return;
+  }
+
+  frame++;
+
+  mamute.y += mamute.vy;
+  mamute.vy += gravidade;
+  if (mamute.y >= chao - mamute.h) {
+    mamute.y = chao - mamute.h; mamute.vy = 0;
+    if (mamute.jumping && !mamute.teveColisaoNoPulo) {
+      pulosBemSucedidos++;
+      if (pulosBemSucedidos % 6 === 0) mostrarQuiz();
+    }
+    mamute.jumping = false;
+  }
+
+  framesParaProximoObstaculo--;
+  if (framesParaProximoObstaculo <= 0) {
+    const larguraGrupo = criarObstaculo();
+    agendarProximoObstaculo(larguraGrupo);
+  }
+
+  if (frame % 500 === 0) criarCoracao();
+
+  obstaculos.forEach(o => o.x -= velocidade);
+  obstaculos = obstaculos.filter(o => o.x + o.w > 0);
+  coracoes.forEach(c => c.x -= velocidade);
+  coracoes = coracoes.filter(c => c.x + c.w > 0);
+
+  obstaculos.forEach(o => {
+    if (o.atingido) return;
+
+    if (o.tipo === "buraco") {
+      if (colideBuraco(mamute, o)) {
+        o.atingido = true;
+        efeitoChoque();
+        tocarSom("buraco");
+        vidas = 0;
+        atualizarVidas();
+        finalizarJogo();
+      }
+    } else if (colide(mamute, o)) {
+      o.atingido = true;
+      mamute.teveColisaoNoPulo = true;
+      vidas--;
+      atualizarVidas();
+      efeitoChoque();
+      if (vidas <= 0) { finalizarJogo(); }
+    }
+  });
+  if (gameOver) return;
+
+  coracoes.forEach(c => {
+    if (!c.pego && colideCoracao(mamute, c)) {
+      c.pego = true;
+      if (vidas < vidasMax) { vidas++; atualizarVidas(); tocarSom("vida"); }
+    }
+  });
+  coracoes = coracoes.filter(c => !c.pego);
+
+  pontos += 0.12;
+  scoreEl.textContent = Math.floor(pontos);
+  document.getElementById("nivelTxt").textContent = nivelDificuldade() + 1;
+
+  desenharFundo();
+  obstaculos.forEach(desenharObstaculo);
+  coracoes.forEach(desenharCoracao);
+  desenharMamute();
+}
+
+atualizarVidas();
+</script>
 </body>
 </html>
