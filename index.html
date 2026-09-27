@@ -32,7 +32,6 @@ body{
   display:flex;flex-direction:column;min-height:100vh;
 }
 
-/* Wrapper que agrupa sidebar + conteúdo (SEM o footer) */
 .page-body{display:flex;flex:1 0 auto;width:100%}
 
 /* SIDEBAR */
@@ -124,11 +123,13 @@ p{text-align:justify}
   border:1px solid var(--border-tech);border-radius:12px;padding:20px}
 
 .project-console{background:var(--bg-console);border:1px solid var(--border-glow);border-radius:14px;padding:30px}
+.project-console + .project-console{margin-top:20px}
 .btn-action-tech{display:inline-flex;align-items:center;gap:10px;background:var(--emerald-main);
   color:#fff;font-family:var(--font-tech);font-weight:700;font-size:.9rem;padding:13px 26px;
   border-radius:8px;text-decoration:none;box-shadow:0 0 15px var(--green-glow);margin-top:18px}
 .btn-action-tech:hover{background:var(--neon-green);color:#000;transform:scale(1.03)}
 .project-console p{color:var(--text-dim);text-align:justify}
+.project-tag-line{font-family:var(--font-tech);font-size:.85rem;color:var(--neon-green);margin-bottom:14px;text-align:left}
 
 .goals-container{display:flex;flex-direction:column;gap:16px}
 .goal-box{background:var(--bg-subcard);border:1px solid var(--border-tech);border-radius:12px;
@@ -137,7 +138,20 @@ p{text-align:justify}
 .goal-box h4{color:var(--neon-green);font-size:1.1rem;margin-bottom:6px}
 .goal-box p{color:var(--text-bright);font-size:.95rem;line-height:1.6;text-align:justify}
 
-/* FOOTER — agora fora do .page-body, no fim REAL do documento */
+/* Placeholder para abas futuras (Notícias / Contatos) */
+.coming-soon-box{
+  background:var(--bg-subcard);border:1px dashed var(--border-tech);border-radius:14px;
+  padding:50px 30px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+.coming-soon-box i{font-size:2.6rem;color:var(--neon-green)}
+.coming-soon-box h3{font-size:1.2rem;color:var(--text-bright)}
+.coming-soon-box p{color:var(--text-dim);font-size:.95rem;max-width:500px;text-align:center}
+.coming-soon-tag{
+  font-family:var(--font-tech);font-size:.78rem;color:var(--neon-green);background:rgba(16,185,129,.12);
+  border:1px solid var(--border-tech);padding:5px 14px;border-radius:50px;
+}
+
+/* FOOTER — fora do fluxo de conteúdo, sempre no fim real do documento */
 .tech-footer-centered{
   flex-shrink:0;width:100%;padding:22px 0;border-top:1px solid var(--border-tech);
   text-align:center;font-family:var(--font-tech);font-size:.85rem;color:var(--text-muted);
@@ -174,6 +188,8 @@ p{text-align:justify}
         <button class="console-btn" onclick="switchTechTab('equipe',event)"><i class="fa-solid fa-terminal"></i> // INTEGRANTES</button>
         <button class="console-btn" onclick="switchTechTab('projetos',event)"><i class="fa-solid fa-microchip"></i> // PROJETOS</button>
         <button class="console-btn" onclick="switchTechTab('objetivos',event)"><i class="fa-solid fa-network-wired"></i> // OBJETIVOS</button>
+        <button class="console-btn" onclick="switchTechTab('noticias',event)"><i class="fa-solid fa-newspaper"></i> // NOTÍCIAS</button>
+        <button class="console-btn" onclick="switchTechTab('contatos',event)"><i class="fa-solid fa-address-book"></i> // CONTATOS</button>
       </nav>
 
       <div class="sidebar-footer">
@@ -187,7 +203,7 @@ p{text-align:justify}
     <main class="main-content">
       <div class="main-inner">
 
-        <!-- SOBRE -->
+        <!-- ===================== SOBRE ===================== -->
         <div id="pane-sobre" class="tab-pane active">
           <div class="page-title">// SOBRE</div>
           <h2 class="section-heading">Apresentação Institucional</h2>
@@ -220,7 +236,7 @@ p{text-align:justify}
           </div>
         </div>
 
-        <!-- INTEGRANTES -->
+        <!-- ===================== INTEGRANTES ===================== -->
         <div id="pane-equipe" class="tab-pane">
           <div class="page-title">// INTEGRANTES</div>
           <h2 class="section-heading">Corpo Docente & Discentes</h2>
@@ -308,11 +324,12 @@ p{text-align:justify}
           </div>
         </div>
 
-        <!-- PROJETOS -->
+        <!-- ===================== PROJETOS ===================== -->
         <div id="pane-projetos" class="tab-pane">
           <div class="page-title">// PROJETOS</div>
           <h2 class="section-heading">Linhas de Desenvolvimento</h2>
 
+          <!-- CATEGORIA 1: JOGOS EDUCACIONAIS -->
           <div class="tech-panel">
             <div class="panel-header-title"><i class="fa-solid fa-headset"></i> LINHA DE DESENVOLVIMENTO: JOGOS EDUCACIONAIS 4.0</div>
             <div class="project-console">
@@ -329,8 +346,11 @@ p{text-align:justify}
             </div>
           </div>
 
+          <!-- CATEGORIA 2: SISTEMAS DE GERENCIAMENTO (LABDECK + NIB-CESP juntos) -->
           <div class="tech-panel">
             <div class="panel-header-title"><i class="fa-solid fa-server"></i> LINHA DE DESENVOLVIMENTO: SISTEMAS DE GERENCIAMENTO</div>
+
+            <!-- Projeto: LABDECK -->
             <div class="project-console">
               <div style="font-family:var(--font-tech);font-size:.82rem;color:var(--neon-green);margin-bottom:10px">
                 &gt; PROJECT_STATUS: ACTIVE // OPERATIONAL
@@ -343,10 +363,27 @@ p{text-align:justify}
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> ACESSAR LABDECK ZÉ DOCA
               </a>
             </div>
-          </div>
-        </div>
 
-        <!-- OBJETIVOS -->
+            <!-- Projeto: NIB-CESP -->
+            <div class="project-console">
+              <div style="font-family:var(--font-tech);font-size:.82rem;color:var(--neon-green);margin-bottom:10px">
+                &gt; PROJECT_STATUS: ACTIVE // OPERATIONAL
+              </div>
+              <h3 style="color:var(--text-bright);font-size:1.35rem;margin-bottom:6px">NIB-CESP - Núcleo de Informática Biomédica</h3>
+              <p class="project-tag-line">Inteligência Digital e Governança Operacional em Saúde Pública</p>
+              <p style="font-size:1rem;line-height:1.6;margin-bottom:22px">
+                Este sistema centraliza a gestão de ativos tecnológicos, a regulação de espaços físicos e o suporte técnico às atividades de ensino, pesquisa e extensão, otimizando o fluxo de trabalho acadêmico e administrativo do laboratório de informática biomédica.
+              </p>
+              <a href="https://maamute.com.br/nib-cesp/" target="_blank" class="btn-action-tech">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> ACESSAR NIB-CESP
+              </a>
+            </div>
+
+          </div><!-- /.tech-panel Sistemas de Gerenciamento -->
+
+        </div><!-- /#pane-projetos -->
+
+        <!-- ===================== OBJETIVOS ===================== -->
         <div id="pane-objetivos" class="tab-pane">
           <div class="page-title">// OBJETIVOS</div>
           <h2 class="section-heading">Objetivos Institucionais & Diretrizes</h2>
@@ -386,9 +423,37 @@ p{text-align:justify}
           </div>
         </div>
 
-      </div>
+        <!-- ===================== NOTÍCIAS (futuro) ===================== -->
+        <div id="pane-noticias" class="tab-pane">
+          <div class="page-title">// NOTÍCIAS</div>
+          <h2 class="section-heading">Notícias & Atualizações</h2>
+          <div class="tech-panel">
+            <div class="coming-soon-box">
+              <i class="fa-solid fa-newspaper"></i>
+              <span class="coming-soon-tag">EM BREVE</span>
+              <h3>Conteúdo em preparação</h3>
+              <p>Esta seção será utilizada para divulgar notícias, eventos, publicações e atualizações do grupo MAAMUTE-TURI. Em breve, novidades serão publicadas aqui.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== CONTATOS (futuro) ===================== -->
+        <div id="pane-contatos" class="tab-pane">
+          <div class="page-title">// CONTATOS</div>
+          <h2 class="section-heading">Contatos & Redes</h2>
+          <div class="tech-panel">
+            <div class="coming-soon-box">
+              <i class="fa-solid fa-address-book"></i>
+              <span class="coming-soon-tag">EM BREVE</span>
+              <h3>Informações de contato em implementação</h3>
+              <p>Em breve, esta seção reunirá canais de contato, e-mail institucional, redes sociais e formas de comunicação com o grupo MAAMUTE-TURI.</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.main-inner -->
     </main>
-  </div>
+  </div><!-- /.page-body -->
 
   <!-- FOOTER — sempre no rodapé real do documento -->
   <footer class="tech-footer-centered">Desenvolvido por Grupo MAAMUTE. © Copyright 2026, All Rights Reserved.</footer>
