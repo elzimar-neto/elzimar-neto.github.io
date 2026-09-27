@@ -52,7 +52,6 @@ body{
   font-family:var(--font-tech);font-size:.72rem;color:var(--text-dim);line-height:1.5;margin-top:6px;
   display:block;text-align:justify;
 }
-.brand-acronym .prompt{color:var(--neon-green);font-weight:700}
 
 .status-indicator{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-tech);
   font-size:.75rem;color:var(--neon-green);background:rgba(16,185,129,.12);
@@ -138,7 +137,6 @@ p{text-align:justify}
 .goal-box h4{color:var(--neon-green);font-size:1.1rem;margin-bottom:6px}
 .goal-box p{color:var(--text-bright);font-size:.95rem;line-height:1.6;text-align:justify}
 
-/* Placeholder para abas futuras (Notícias / Contatos) */
 .coming-soon-box{
   background:var(--bg-subcard);border:1px dashed var(--border-tech);border-radius:14px;
   padding:50px 30px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;
@@ -151,7 +149,6 @@ p{text-align:justify}
   border:1px solid var(--border-tech);padding:5px 14px;border-radius:50px;
 }
 
-/* FOOTER — fora do fluxo de conteúdo, sempre no fim real do documento */
 .tech-footer-centered{
   flex-shrink:0;width:100%;padding:22px 0;border-top:1px solid var(--border-tech);
   text-align:center;font-family:var(--font-tech);font-size:.85rem;color:var(--text-muted);
@@ -177,19 +174,19 @@ p{text-align:justify}
         <div class="mascot-ring"><img src="maamute.png" alt="Mascote MAAMUTE" onerror="this.onerror=null; this.src='https://via.placeholder.com/56/050b07/00ff66?text=M';"></div>
         <div>
           <h1>MAAMUTE<span>-TURI</span></h1>
-          <span class="brand-acronym"><span class="prompt">&gt; ACRÔNIMO:</span> Modelagem Aplicada, Algoritmos, Matemática e Uso de Tecnologias Educacionais do Alto Turi</span>
+          <span class="brand-acronym">Modelagem Aplicada, Algoritmos, Matemática e Uso de Tecnologias Educacionais do Alto Turi</span>
         </div>
       </div>
 
       <div class="status-indicator"><span class="pulse-dot"></span> GRUPO ATIVO / OPERACIONAL</div>
 
       <nav class="nav-console">
-        <button class="console-btn active" onclick="switchTechTab('sobre',event)"><i class="fa-solid fa-code"></i> // SOBRE</button>
-        <button class="console-btn" onclick="switchTechTab('equipe',event)"><i class="fa-solid fa-terminal"></i> // INTEGRANTES</button>
-        <button class="console-btn" onclick="switchTechTab('projetos',event)"><i class="fa-solid fa-microchip"></i> // PROJETOS</button>
-        <button class="console-btn" onclick="switchTechTab('objetivos',event)"><i class="fa-solid fa-network-wired"></i> // OBJETIVOS</button>
-        <button class="console-btn" onclick="switchTechTab('noticias',event)"><i class="fa-solid fa-newspaper"></i> // NOTÍCIAS</button>
-        <button class="console-btn" onclick="switchTechTab('contatos',event)"><i class="fa-solid fa-address-book"></i> // CONTATOS</button>
+        <button class="console-btn active" onclick="switchTechTab('sobre',event)"><i class="fa-solid fa-code"></i> Sobre</button>
+        <button class="console-btn" onclick="switchTechTab('equipe',event)"><i class="fa-solid fa-terminal"></i> Integrantes</button>
+        <button class="console-btn" onclick="switchTechTab('projetos',event)"><i class="fa-solid fa-microchip"></i> Projetos</button>
+        <button class="console-btn" onclick="switchTechTab('objetivos',event)"><i class="fa-solid fa-network-wired"></i> Objetivos</button>
+        <button class="console-btn" onclick="switchTechTab('noticias',event)"><i class="fa-solid fa-newspaper"></i> Notícias</button>
+        <button class="console-btn" onclick="switchTechTab('contatos',event)"><i class="fa-solid fa-address-book"></i> Contatos</button>
       </nav>
 
       <div class="sidebar-footer">
@@ -203,12 +200,12 @@ p{text-align:justify}
     <main class="main-content">
       <div class="main-inner">
 
-        <!-- ===================== SOBRE ===================== -->
+        <!-- SOBRE -->
         <div id="pane-sobre" class="tab-pane active">
-          <div class="page-title">// SOBRE</div>
+          <div class="page-title">Sobre</div>
           <h2 class="section-heading">Apresentação Institucional</h2>
           <div class="tech-panel">
-            <div class="panel-header-title"><i class="fa-solid fa-microscope"></i> APRESENTAÇÃO INSTITUCIONAL</div>
+            <div class="panel-header-title"><i class="fa-solid fa-microscope"></i> Apresentação Institucional</div>
             <p style="color:var(--text-bright);line-height:1.8;font-size:1.05rem;margin-bottom:16px">
               O <strong>MAAMUTE-TURI</strong> é um grupo institucional de pesquisa e estudos sediado no <strong>Instituto Federal do Maranhão (IFMA) - Campus Zé Doca</strong>. Foi idealizado para consolidar um polo regional de inovação, aliando rigor científico ao desenvolvimento de soluções digitais voltadas para a educação técnica, tecnológica e básica da microrregião do Alto Turi.
             </p>
@@ -236,13 +233,13 @@ p{text-align:justify}
           </div>
         </div>
 
-        <!-- ===================== INTEGRANTES ===================== -->
+        <!-- INTEGRANTES -->
         <div id="pane-equipe" class="tab-pane">
-          <div class="page-title">// INTEGRANTES</div>
+          <div class="page-title">Integrantes</div>
           <h2 class="section-heading">Corpo Docente & Discentes</h2>
 
           <div class="tech-panel">
-            <div class="panel-header-title"><i class="fa-solid fa-user-shield"></i> CORPO DOCENTE (PESQUISADORES)</div>
+            <div class="panel-header-title"><i class="fa-solid fa-user-shield"></i> Corpo Docente (Pesquisadores)</div>
 
             <div class="teacher-grid">
               <div class="teacher-card">
@@ -304,7 +301,7 @@ p{text-align:justify}
           </div>
 
           <div class="tech-panel">
-            <div class="panel-header-title"><i class="fa-solid fa-user-graduate"></i> DISCENTES PESQUISADORES</div>
+            <div class="panel-header-title"><i class="fa-solid fa-user-graduate"></i> Discentes Pesquisadores</div>
             <div class="student-grid">
               <div class="student-card">
                 <i class="fa-solid fa-graduation-cap" style="color:var(--neon-green);font-size:2rem"></i>
@@ -324,14 +321,13 @@ p{text-align:justify}
           </div>
         </div>
 
-        <!-- ===================== PROJETOS ===================== -->
+        <!-- PROJETOS -->
         <div id="pane-projetos" class="tab-pane">
-          <div class="page-title">// PROJETOS</div>
+          <div class="page-title">Projetos</div>
           <h2 class="section-heading">Linhas de Desenvolvimento</h2>
 
-          <!-- CATEGORIA 1: JOGOS EDUCACIONAIS -->
           <div class="tech-panel">
-            <div class="panel-header-title"><i class="fa-solid fa-headset"></i> LINHA DE DESENVOLVIMENTO: JOGOS EDUCACIONAIS 4.0</div>
+            <div class="panel-header-title"><i class="fa-solid fa-headset"></i> Linha de Desenvolvimento: Jogos Educacionais 4.0</div>
             <div class="project-console">
               <div style="font-family:var(--font-tech);font-size:.82rem;color:var(--neon-green);margin-bottom:10px">
                 &gt; PROJECT_STATUS: ACTIVE // EXECUTION_READY
@@ -346,11 +342,9 @@ p{text-align:justify}
             </div>
           </div>
 
-          <!-- CATEGORIA 2: SISTEMAS DE GERENCIAMENTO (LABDECK + NIB-CESP juntos) -->
           <div class="tech-panel">
-            <div class="panel-header-title"><i class="fa-solid fa-server"></i> LINHA DE DESENVOLVIMENTO: SISTEMAS DE GERENCIAMENTO</div>
+            <div class="panel-header-title"><i class="fa-solid fa-server"></i> Linha de Desenvolvimento: Sistemas de Gerenciamento</div>
 
-            <!-- Projeto: LABDECK -->
             <div class="project-console">
               <div style="font-family:var(--font-tech);font-size:.82rem;color:var(--neon-green);margin-bottom:10px">
                 &gt; PROJECT_STATUS: ACTIVE // OPERATIONAL
@@ -364,7 +358,6 @@ p{text-align:justify}
               </a>
             </div>
 
-            <!-- Projeto: NIB-CESP -->
             <div class="project-console">
               <div style="font-family:var(--font-tech);font-size:.82rem;color:var(--neon-green);margin-bottom:10px">
                 &gt; PROJECT_STATUS: ACTIVE // OPERATIONAL
@@ -379,17 +372,16 @@ p{text-align:justify}
               </a>
             </div>
 
-          </div><!-- /.tech-panel Sistemas de Gerenciamento -->
+          </div>
+        </div>
 
-        </div><!-- /#pane-projetos -->
-
-        <!-- ===================== OBJETIVOS ===================== -->
+        <!-- OBJETIVOS -->
         <div id="pane-objetivos" class="tab-pane">
-          <div class="page-title">// OBJETIVOS</div>
+          <div class="page-title">Objetivos</div>
           <h2 class="section-heading">Objetivos Institucionais & Diretrizes</h2>
 
           <div class="tech-panel">
-            <div class="panel-header-title"><i class="fa-solid fa-bullseye"></i> OBJETIVOS INSTITUCIONAIS & DIRETRIZES</div>
+            <div class="panel-header-title"><i class="fa-solid fa-bullseye"></i> Objetivos Institucionais & Diretrizes</div>
             <div class="goals-container">
               <div class="goal-box">
                 <i class="fa-solid fa-code"></i>
@@ -423,9 +415,9 @@ p{text-align:justify}
           </div>
         </div>
 
-        <!-- ===================== NOTÍCIAS (futuro) ===================== -->
+        <!-- NOTÍCIAS -->
         <div id="pane-noticias" class="tab-pane">
-          <div class="page-title">// NOTÍCIAS</div>
+          <div class="page-title">Notícias</div>
           <h2 class="section-heading">Notícias & Atualizações</h2>
           <div class="tech-panel">
             <div class="coming-soon-box">
@@ -437,9 +429,9 @@ p{text-align:justify}
           </div>
         </div>
 
-        <!-- ===================== CONTATOS (futuro) ===================== -->
+        <!-- CONTATOS -->
         <div id="pane-contatos" class="tab-pane">
-          <div class="page-title">// CONTATOS</div>
+          <div class="page-title">Contatos</div>
           <h2 class="section-heading">Contatos & Redes</h2>
           <div class="tech-panel">
             <div class="coming-soon-box">
@@ -451,11 +443,10 @@ p{text-align:justify}
           </div>
         </div>
 
-      </div><!-- /.main-inner -->
+      </div>
     </main>
-  </div><!-- /.page-body -->
+  </div>
 
-  <!-- FOOTER — sempre no rodapé real do documento -->
   <footer class="tech-footer-centered">Desenvolvido por Grupo MAAMUTE. © Copyright 2026, All Rights Reserved.</footer>
 
 <script>
